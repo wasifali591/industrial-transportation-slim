@@ -14,3 +14,4 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 });
 
 include("../api/register.php");
+include("../api/login.php");
