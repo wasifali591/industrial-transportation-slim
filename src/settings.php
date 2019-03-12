@@ -16,11 +16,19 @@ return [
             'level' => \Monolog\Logger::DEBUG,
         ],
 
+
+        //db settings
         'db' => [
             'host' => '172.16.9.42',
             'database' => 'industrial-transport',
             'username' => 'admin',
             'password' => 'mindfire',
         ],
+
+        //jwt settings
+        'jwt'=>[
+            'secret' => 'truckage'
+        ],
+
     ],
 ];
