@@ -7,7 +7,7 @@ use \Firebase\JWT\JWT;
 $app->post('/login', function (Request $request, Response $response) {
     $fm = $this->get('db');
 
-    $Email = $request->getParsedBody()['Email'];
+    $Email = $request->getParsedBody()['username'];
     $password = $request->getParsedBody()['password'];
 
     if ($Email != '' && $password != '') {
