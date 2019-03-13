@@ -1,0 +1,12 @@
+/////////////////////// PROJECT DOC ///////////////////////////////////
+
+if(!preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,12}$/', $password)) {
+    echo 'the password does not meet the requirements!';
+}
+Between start -> ^
+And end -> $
+of the string there has to be at least one number -> (?=.*\d)
+and at least one letter -> (?=.*[A-Za-z])
+and at least one special character -> [!@#$%]
+and it has to be a number, a letter or one of the following: !@#$% -> [0-9A-Za-z!@#$%]
+minimum 8 characters -> {8, }

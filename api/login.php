@@ -16,7 +16,7 @@ $app->post('/login', function (Request $request, Response $response) {
         $result = $fmquery->execute();
 
         if (FileMaker::isError($result)) {
-            return $response->withJSON(['error' => true, 'message' => 'Email is not correct.'], 404);
+            return $response->withJSON(['error' => true, 'message' => 'User not found. Please register first.'], 400);
         } else {
             $records = $result->getRecords();
             $record = $records[0];
@@ -27,15 +27,30 @@ $app->post('/login', function (Request $request, Response $response) {
             $result = $fmquery->execute();
             $records = $result->getRecords();
             $record = $records[0];
-            $currentPassword = $record->getField('CurrentPassword_xt');
+            $hash = $record->getField('CurrentPassword_xt');
+            // echo $hash;
 
-            if ($password == $currentPassword) {
+            // echo $password;
+            // exit();
+            // $options = [
+            //     'cost' => 10
+            // ];
+            // $hashCode = password_hash('$password', PASSWORD_BCRYPT, $options);
+            // echo $hashCode;
+
+            if (password_verify($password, $hash)) {
                 $settings = $this->get('settings'); //get settings array
                 $token = JWT::encode(['id' => $currentId, 'email' => $Email], $settings['jwt']['secret'], "HS256");
                 return $response->withJSON(['token' => $token], 201);
             } else {
-                return $response->withJSON(['error' => true, 'message' => 'Password is not correct.'], 404);
+                return $response->withJSON(['error' => true, 'message' => 'Invalid Email or Password.'], 403);
             }
+
+            // if ($password == $currentPassword) {
+
+            // } else {
+
+            // }
         }
     }
 });

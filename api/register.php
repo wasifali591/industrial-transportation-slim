@@ -3,7 +3,7 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app->post('/api/register', function (Request $request, Response $response) {
+$app->post('/register', function (Request $request, Response $response) {
 	// Fetching filemaker connection from container 'db'
 	$fm = $this->get('db');
 
@@ -12,31 +12,42 @@ $app->post('/api/register', function (Request $request, Response $response) {
 	$fullName = $request->getParsedBody()['fullName'];
 	$Email = $request->getParsedBody()['Email'];
 	$password = $request->getParsedBody()['password'];
-	//$mobile = $request->getParsedBody()['confirmPassword'];
-		
+
 
 	// Checking if any of the fields are empty
 	if ($fullName != '' && $Email != '' && $password != '') {
-			$fmquery = $fm->newAddCommand("User");
-			$fmquery->setField("UserName_xt", $fullName);
-			$fmquery->setField("Email_xt", $Email);
-			$result = $fmquery->execute();
 
-			$recs=$result->getRecords();
-			$count=count($recs);
-			$lastID=$recs[$count-1]->getRecordID();
-			
-			$fmquery=$fm->newAddCommand("UserCredentials");
-			$fmquery->setField("__kf_UserId_xn",$lastID);
-			$fmquery->setField("CurrentPassword_xt",$password);
-			$result=$fmquery->execute();
-	}	
+		if (!filter_var($Email, FILTER_VALIDATE_EMAIL)) {
+		    return $response->withJSON(['error' => true, 'message' => 'Enter valid Email.'], 401);
+		}
+
+		if (!preg_match('/^(?=.*\d)(?=.*[A-Za-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/', $password)) {
+		    return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], 401);
+		}
+
+		$options = [
+			'cost' => 10
+		];
+		$hashCode= password_hash('$password', PASSWORD_BCRYPT, $options);
+
+		$fmquery = $fm->newAddCommand("UserLayout");
+		$fmquery->setField("UserName_xt", $fullName);
+		$fmquery->setField("Email_xt", $Email);
+		$result = $fmquery->execute();
+
+		$recs = $result->getRecords();
+		$count = count($recs);
+		$lastID = $recs[$count - 1]->getRecordID();
+
+		$fmquery = $fm->newAddCommand("UserCredentials");
+		$fmquery->setField("__kf_UserId_xn", $lastID);
+		$fmquery->setField("CurrentPassword_xt", $hashCode);
+		$result = $fmquery->execute();
+	}
 
 	if (FileMaker::isError($result)) {
-			$ErrMsg = 'Error code: ' . $result->getCode() . ' Message: ' . $result->getMessage();
-			echo 'Connection Failed: ' . $ErrMsg;
-			return $response->withJSON($result->getMessage(), $result->getCode());
-		} else {
-			return $response->withJSON('Success', 201);
-		}
+		return $response->withJSON(['error' => true, 'message' => 'Registration failed.'], 403);
+	} else {
+		return $response->withJSON(['message' => 'Successfully registered.'], 200);
+	}
 });
