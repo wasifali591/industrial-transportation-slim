@@ -1,6 +1,4 @@
 <?php
- /*Security*/
-define('SECRET_KEY', 'test123');
 
 /*Error Code */
 define('REQUEST_METHOD_NOT_VALID', 100);
@@ -18,3 +16,7 @@ define('SUCCESS_RESPONSE', 200);
 /*Servers Errors */
 define('AUTHORIZATION_HEADER_NOT_FOUND',300);
 define('ACCESS_TOKEN_ERRORS',301);
+
+define('UNAUTHORIZED_USER',401);
+
+define('INTERNAL_SERVER_ERROR',500);

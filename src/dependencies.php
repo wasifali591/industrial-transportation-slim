@@ -31,3 +31,5 @@ $container['db'] = function ($c) {
 	$fm->setProperty('password', $settings['password']);
 	return $fm;
 };
+
+

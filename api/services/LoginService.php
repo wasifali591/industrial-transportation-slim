@@ -1,22 +1,23 @@
 <?php
-
-use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Firebase\JWT\JWT;
 
-$app->post('/login', function (Request $request, Response $response) {
-    $fm = $this->get('db');
+require_once __DIR__ . '/../../constants/StatusCode.php';
 
-    $Email = $request->getParsedBody()['username'];
-    $password = $request->getParsedBody()['password'];
 
+function checkLogIn(string $Email, string $password, Response $response,  $context){
     if ($Email != '' && $password != '') {
+
+        //validate password and email
+        //validate($Email, $password, $response);
+
+        $fm = $context->get('db');
         $fmquery = $fm->newFindCommand("UserLayout");
         $fmquery->addFindCriterion('Email_xt', '==' . $Email);
         $result = $fmquery->execute();
 
         if (FileMaker::isError($result)) {
-            return $response->withJSON(['error' => true, 'message' => 'User not found. Please register first.'], 400);
+            return $response->withJSON(['error' => true, 'message' => 'User not found. Please register first.'], UNAUTHORIZED_USER);
         } else {
             $records = $result->getRecords();
             $record = $records[0];
@@ -28,29 +29,16 @@ $app->post('/login', function (Request $request, Response $response) {
             $records = $result->getRecords();
             $record = $records[0];
             $hash = $record->getField('CurrentPassword_xt');
-            // echo $hash;
 
-            // echo $password;
-            // exit();
-            // $options = [
-            //     'cost' => 10
-            // ];
-            // $hashCode = password_hash('$password', PASSWORD_BCRYPT, $options);
-            // echo $hashCode;
 
             if (password_verify($password, $hash)) {
-                $settings = $this->get('settings'); //get settings array
+                $settings = $context->get('settings'); //get settings array
                 $token = JWT::encode(['id' => $currentId, 'email' => $Email], $settings['jwt']['secret'], "HS256");
-                return $response->withJSON(['token' => $token], 201);
+                return $response->withJSON(['token' => $token], SUCCESS_RESPONSE);
             } else {
-                return $response->withJSON(['error' => true, 'message' => 'Invalid Email or Password.'], 403);
+                return $response->withJSON(['error' => true, 'message' => 'Invalid Email or Password.'], INVALID_USER_PASS);
             }
-
-            // if ($password == $currentPassword) {
-
-            // } else {
-
-            // }
         }
     }
-});
+}
+

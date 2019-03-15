@@ -13,5 +13,9 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
     return $this->renderer->render($response, 'index.phtml', $args);
 });
 
-include("../api/register.php");
-include("../api/login.php");
+// include("../api/register.php");
+require __DIR__.'/../api/controllers/RegisterController.php';
+// include("../api/controllers/login-controller.php");
+require __DIR__.'/../api/controllers/LoginController.php';
+// include("../api/update-profile.php");
+require __DIR__.'/../api/update-profile.php';

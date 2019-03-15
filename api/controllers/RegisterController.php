@@ -3,7 +3,10 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app->post('/register', function (Request $request, Response $response) {
+require __DIR__ . '/../constants/EndPoints.php';
+require __DIR__ . '/../constants/StatusCode.php';
+
+$app->post(USER_REGISTER_API_END_POINT, function (Request $request, Response $response) {
 	// Fetching filemaker connection from container 'db'
 	$fm = $this->get('db');
 
@@ -17,18 +20,14 @@ $app->post('/register', function (Request $request, Response $response) {
 	// Checking if any of the fields are empty
 	if ($fullName != '' && $Email != '' && $password != '') {
 
-		if (!filter_var($Email, FILTER_VALIDATE_EMAIL)) {
-		    return $response->withJSON(['error' => true, 'message' => 'Enter valid Email.'], 401);
-		}
+		//validate password and email
+        //validate($Email, $password, $response);
 
-		if (!preg_match('/^(?=.*\d)(?=.*[A-Za-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/', $password)) {
-		    return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], 401);
-		}
-
+		// generate hashcode using bcrypt technique with cost 10
 		$options = [
 			'cost' => 10
-		];
-		$hashCode= password_hash('$password', PASSWORD_BCRYPT, $options);
+		];		
+		$hashCode = password_hash($password, PASSWORD_BCRYPT, $options);
 
 		$fmquery = $fm->newAddCommand("UserLayout");
 		$fmquery->setField("UserName_xt", $fullName);
@@ -43,11 +42,12 @@ $app->post('/register', function (Request $request, Response $response) {
 		$fmquery->setField("__kf_UserId_xn", $lastID);
 		$fmquery->setField("CurrentPassword_xt", $hashCode);
 		$result = $fmquery->execute();
-	}
 
-	if (FileMaker::isError($result)) {
-		return $response->withJSON(['error' => true, 'message' => 'Registration failed.'], 403);
-	} else {
-		return $response->withJSON(['message' => 'Successfully registered.'], 200);
+
+		if (FileMaker::isError($result)) {
+			return $response->withJSON(['error' => true, 'message' => 'Registration failed.'], INTERNAL_SERVER_ERROR);
+		} else {
+			return $response->withJSON(['message' => 'Successfully registered.'], SUCCESS_RESPONSE);
+		}
 	}
 });
