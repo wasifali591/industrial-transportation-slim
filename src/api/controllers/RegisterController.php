@@ -2,6 +2,7 @@
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use App\validation\Validator;
 
 require_once __DIR__ . '/../../constants/EndPoints.php';
 require_once __DIR__ . '/../../constants/StatusCode.php';
@@ -10,27 +11,40 @@ $app->post(USER_REGISTER_API_END_POINT, function (Request $request, Response $re
 	// Fetching filemaker connection from container 'db'
 	$fm = $this->get('db');
 
-
 	// Receiving values from Angular and assigning it to a variable
-	$fullName = $request->getParsedBody()['fullName'];
+	$firstName = $request->getParsedBody()['firstName'];
+	$lastName = $request->getParsedBody()['lastName'];
 	$Email = $request->getParsedBody()['Email'];
+	$userType = $request->getParsedBody()['userType'];
 	$password = $request->getParsedBody()['password'];
 
 
 	// Checking if any of the fields are empty
-	if ($fullName != '' && $Email != '' && $password != '') {
+	if ($firstName == '' || $lastName == '' || $Email == '' || $userType == '' || $password == '') {
+		return $response->withJSON(['error' => true, 'message' => 'Enter the required field.'], USER_NOT_FOUND);
+	} else {
+		$validator=new Validator();
+		$validateEmail = $validator->ValidateEmail($Email);
+		if ($validateEmail == false) {			
+			return $response->withJSON(['error' => true, 'message' => 'Enter valid Email.'], UNAUTHORIZED_USER);
+			exit();
+		}
 
-		//validate password and email
-        //validate($Email, $password, $response);
+		$validatePassword = $validator->ValidatePassword($password);
+		if ($validatePassword == false) {
+			return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], UNAUTHORIZED_USER);
+		}
 
 		// generate hashcode using bcrypt technique with cost 10
 		$options = [
 			'cost' => 10
-		];		
+		];
 		$hashCode = password_hash($password, PASSWORD_BCRYPT, $options);
 
 		$fmquery = $fm->newAddCommand("UserLayout");
-		$fmquery->setField("UserName_xt", $fullName);
+		$fmquery->setField("UserType_xt", $userType);
+		$fmquery->setField("UserFirstName_xt", $firstName);
+		$fmquery->setField("UserLastName_xt", $lastName);
 		$fmquery->setField("Email_xt", $Email);
 		$result = $fmquery->execute();
 
