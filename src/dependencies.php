@@ -36,6 +36,10 @@
         return new App\api\controllers\LoginController($c);
     };
 
-    $container['LoginService'] = function ($c) {
-        return new App\api\services\LoginService($c);
+    // $container['LoginService'] = function ($c) {
+    //     return new App\api\services\LoginService($c);
+    // };
+
+    $container['RegisterController']=function($c){
+        return new App\api\controllers\RegisterController($c);
     };

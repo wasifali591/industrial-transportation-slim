@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * File Name  : StatusCode
+* Description : define macro for status codes
+* Created date : 19/03/2019
+* Author  : Md Wasif Ali
+* Comments : 
+ */
 
 /*Error Code */
 define('REQUEST_METHOD_NOT_VALID', 100);
@@ -23,5 +30,6 @@ define('ACCESS_TOKEN_ERRORS',301);
 define('USER_NOT_FOUND',400);
 define('UNAUTHORIZED_USER',401);
 define('INVALID_CREDINTIAL',403);
+define('CONFLICT_CONTENT',409);
 
 define('INTERNAL_SERVER_ERROR',500);

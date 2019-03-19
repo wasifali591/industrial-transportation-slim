@@ -4,7 +4,7 @@
 // e.g: $app->add(new \Slim\Csrf\Guard);
 
 $app->add(new \Tuupola\Middleware\JwtAuthentication([
-    "path" => "/api",
+    "path" => "/private",
     "header"=>"Authorization",
     "attribute" => "decode_token_data",
     "secret" => "truckage",
