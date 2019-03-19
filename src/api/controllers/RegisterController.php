@@ -3,8 +3,8 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-require __DIR__ . '/../../constants/EndPoints.php';
-require __DIR__ . '/../../constants/StatusCode.php';
+require_once __DIR__ . '/../../constants/EndPoints.php';
+require_once __DIR__ . '/../../constants/StatusCode.php';
 
 $app->post(USER_REGISTER_API_END_POINT, function (Request $request, Response $response) {
 	// Fetching filemaker connection from container 'db'
