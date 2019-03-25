@@ -47,3 +47,7 @@
     $container['PasswordController']=function($c){
         return new App\api\controllers\PasswordController($c);
     };
+
+    $container['UserProfileController']=function($c){
+        return new App\api\controllers\UserProfileController($c);
+    };

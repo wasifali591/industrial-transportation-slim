@@ -17,6 +17,7 @@ use App\api\models\RegisterModel;
 
 require_once __DIR__ . '/../../constants/EndPoints.php';
 require_once __DIR__ . '/../../constants/StatusCode.php';
+require_once __DIR__ .'/../services/HashCode.php';
 
 /**
  * class-name:RegisterController
@@ -41,7 +42,7 @@ class RegisterController
      * @param $request
      * description: read the input and chek for validation , for valid data insert into db
      */
-	public function Register(Request $request, Response $response)
+	public function register(Request $request, Response $response)
 	{
 		// Receiving values from Angular and assigning it to a variable
 		$firstName = $request->getParsedBody()['firstName'];
@@ -77,10 +78,11 @@ class RegisterController
 		}
 
 		// generate hashcode using bcrypt technique with cost 10
-		$options = [
-			'cost' => 10
-		];
-		$hashCode = password_hash($password, PASSWORD_BCRYPT, $options);
+		// $options = [
+		// 	'cost' => 10
+		// ];
+		// $hashCode = password_hash($password, PASSWORD_BCRYPT, $options);
+		$hashCode=hashCode($password);
 		//makeing an array of valid inputs
 		$requestValue = array(
 			"userType" => $userType,

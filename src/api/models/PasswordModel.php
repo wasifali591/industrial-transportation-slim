@@ -9,6 +9,8 @@
 
 namespace App\api\models;
 
+require_once __DIR__ .'/../services/HashCode.php';
+
 /**
  * class-name:PasswordModel
  * description:
@@ -56,7 +58,7 @@ class PasswordModel
                 }
             }
 
-            //if the password is previously used the return accordingly
+            //check password is previously used or not 
             if($match){
                 return "OLD_PASSWORD";
             }
@@ -69,10 +71,11 @@ class PasswordModel
                 return "SERVER_ERROR";
             }
             // generate hashcode using bcrypt technique with cost 10
-            $options = [
-        	    'cost' => 10
-            ];
-            $hashCode = password_hash($requestValue['password'], PASSWORD_BCRYPT, $options);
+            // $options = [
+        	//     'cost' => 10
+            // ];
+            // $hashCode = password_hash($requestValue['password'], PASSWORD_BCRYPT, $options);
+            $hashCode=hashCode($requestValue['password']);
             //enter the new password and make it active
             $fmquery = $fm->newAddCommand("UserCredentialsLayout");
             $fmquery->setField("__kf_UserId_xn", $requestValue['id']);

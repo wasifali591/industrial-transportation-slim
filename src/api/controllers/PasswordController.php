@@ -41,13 +41,13 @@ class PasswordController
      * description: read the input and chek for validation , for valid input check in the db and update
      */
     public function changePassword($request, $response){
-        //read the token from header and from the token decode the id of the user
-    
+        //read the token from header and from the token decode the id of the user    
         $headers = apache_request_headers();
         $string = $headers['Authorization'];  
         $str_arr = preg_split ("/\ /", $string);  
         $decoded = JWT::decode($str_arr[1], "truckage", array('HS256'));
         $decoded_array = (array) $decoded;
+        $id=$decoded_array['id'];
 
         //read input
         $oldPassword=$request->getParsedBody()['oldPassword'];
@@ -74,7 +74,7 @@ class PasswordController
         }
         //$requestValue is an array hold related data, which is needed to change password 
         $requestValue = array(
-            "id"=>$decoded_array['id'],
+            "id"=>$id,
         	"oldPassword" => $oldPassword,
         	"password" => $newPassword
         );
