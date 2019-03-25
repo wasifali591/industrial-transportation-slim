@@ -7,6 +7,7 @@ $app->add(new \Tuupola\Middleware\JwtAuthentication([
     "path" => "/private",
     "header"=>"Authorization",
     "attribute" => "decode_token_data",
+    "secure" => false,
     "secret" => "truckage",
     "algorithm" => ["HS256"],
     "error" => function($response,$arguments){

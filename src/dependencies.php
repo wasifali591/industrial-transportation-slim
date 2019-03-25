@@ -43,3 +43,7 @@
     $container['RegisterController']=function($c){
         return new App\api\controllers\RegisterController($c);
     };
+
+    $container['PasswordController']=function($c){
+        return new App\api\controllers\PasswordController($c);
+    };

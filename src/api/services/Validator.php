@@ -6,20 +6,35 @@
 * Author  : Md Wasif Ali
 * Comments : 
  */
-namespace App\api\services;
+
+ namespace App\api\services;
 
 require_once __DIR__ . '/../../constants/StatusCode.php';
 
+/**
+ * class-name:Validator
+ * description: validate the data according to need
+ */
 class Validator{
-    function ValidateEmail(string $Email){
+    /**
+     * function-name:validateEmail
+     * description:
+     */
+    function validateEmail(string $Email){
         if (filter_var($Email, FILTER_VALIDATE_EMAIL)) {
             return true;
         }
+        return false;
     }
 
-    function ValidatePassword(string $password){
+    /**
+     * function-name:validatePassword
+     * description:
+     */
+    function validatePassword(string $password){
         if (preg_match('/^(?=.*\d)(?=.*[A-Za-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/', $password)) {
             return true;
         }
+        return false;
     }
 }

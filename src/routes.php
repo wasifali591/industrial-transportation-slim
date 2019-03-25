@@ -17,11 +17,12 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 
 // public api, which can access anyone without any authentication
 $app->group('/public/v1', function(\Slim\App $app) {
-    $app->post(USER_LOGIN_API_END_POINT,'LoginController:Login');
+    $app->post(USER_LOGIN_API_END_POINT,'LoginController:checkLogin');
     $app->post(USER_REGISTER_API_END_POINT,'RegisterController:Register');
 });
 
 // private api, to access need a token 
 $app->group('/private/v1', function(\Slim\App $app) {
+    $app->post('/change-password','PasswordController:changePassword');
     
 });

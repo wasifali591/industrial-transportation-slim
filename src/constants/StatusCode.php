@@ -20,6 +20,7 @@ define('API_DOST_NOT_EXIST',107);
 define('INVALID_USER_PASS', 108);
 
 define('SUCCESS_RESPONSE', 200);
+define('NEW_RECORD_CREATED',201);
 define('NO_CONTENT',204);
 
 /*Servers Errors */
@@ -30,6 +31,7 @@ define('ACCESS_TOKEN_ERRORS',301);
 define('USER_NOT_FOUND',400);
 define('UNAUTHORIZED_USER',401);
 define('INVALID_CREDINTIAL',403);
+define('NOT_ACCEPTABLE',406);
 define('CONFLICT_CONTENT',409);
 
 define('INTERNAL_SERVER_ERROR',500);

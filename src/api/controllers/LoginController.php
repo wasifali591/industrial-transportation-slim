@@ -40,7 +40,7 @@ class LoginController{
      * @param $request
      * description: read the input and chek for validation , for valid data return a response(token)
      */
-    public function Login($request, $response){
+    public function checkLogin($request, $response){
         $Email = $request->getParsedBody()['username'];
         $password = $request->getParsedBody()['password'];
 
@@ -51,24 +51,24 @@ class LoginController{
         //create instance of Validator
         $validator = new Validator();
         //function(ValidateEmail) call to check email validation
-        $validateEmail = $validator->ValidateEmail($Email);        
+        $validateEmail = $validator->validateEmail($Email);        
 
         //if invalid email then return an error with an error message
         if (!$validateEmail) {
-            return $response->withJSON(['error' => true, 'message' => 'Enter valid Email.'], UNAUTHORIZED_USER);
+            return $response->withJSON(['error' => true, 'message' => 'Enter valid Email.'], INVALID_CREDINTIAL);
         }
         //function(ValidateEmail) call to check password validation
-        $validatePassword = $validator->ValidatePassword($password);
+        $validatePassword = $validator->validatePassword($password);
 
         //if password is not matched with the required pattern the return an error with an error message
         if (!$validatePassword) {
-            return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], UNAUTHORIZED_USER);
+            return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], INVALID_CREDINTIAL);
         }
  
         //create instance of LoginModel
         $checkLogIn = new LoginModel();
         //function(checkLogin) call 
-        $loginResponse = $checkLogIn->checkLogIn($Email, $this->container);
+        $loginResponse = $checkLogIn->checkLoginModel($Email, $this->container);
 
         //if loginResponse is false(email is not found in the database) then return an error with an error message
         if (!$loginResponse) {

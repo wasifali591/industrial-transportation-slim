@@ -21,8 +21,9 @@ class LoginModel{
      * @param $container
      * description: find the $Email  is present in the db or not, if present then find the corosponding password and return 
      */
-    public function checkLogIn(string $Email, $container){
+    public function checkLoginModel(string $Email, $container){
         $fm = $container;
+        $flag="active";
         //find the $Email in db(USerLayout)
         $fmquery = $fm->newFindCommand("UserLayout");
         $fmquery->addFindCriterion('Email_xt', '==' . $Email);
@@ -36,9 +37,11 @@ class LoginModel{
         $records = $result->getRecords();
         $record = $records[0];
         $currentId = $record->getField('___kp_UserId_xn');
-
+        //find active password corosponding to the CurrentId
         $fmquery = $fm->newFindCommand("UserCredentialsLayout");
+        $fmquery->setLogicalOperator('FILEMAKER_FIND_AND');
         $fmquery->addFindCriterion('__kf_UserId_xn', '==' . $currentId);
+        $fmquery->addFindCriterion('Flag_xt', '==' . $flag);
         $result = $fmquery->execute();
 
         // //if $currentId not found return false
@@ -47,7 +50,7 @@ class LoginModel{
         // }
         $records = $result->getRecords();
         $record = $records[0];
-        $hash = $record->getField('CurrentPassword_xt');
+        $hash = $record->getField('Password_xt');
 
         //an array($loginResponse) to sore the user id and the password(hash)
         $loginResponse = array(
