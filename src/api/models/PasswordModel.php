@@ -18,10 +18,10 @@ require_once __DIR__ .'/../services/HashCode.php';
 class PasswordModel
 {
     /**
-     * function-name:Registration
-     * @param $requestValue
-     * @param $container
-     * description: insert input data into their corosponding tables 
+     * function-name:changePassswordModel
+     * @param array  $requestValue hold all the input value
+     * @param Container $container contain database information
+     * description: 
      */
     public function changePassswordModel($requestValue,$container){   
         $fm = $container;
@@ -62,7 +62,7 @@ class PasswordModel
             if($match){
                 return "OLD_PASSWORD";
             }
-            // edit the previous password flag inactive            
+            // edit the previous password flag to inactive            
             $record = $fm->newEditCommand('UserCredentialsLayout', $recordId);
             $record->setField('Flag_xt', "") ;
             $result=$record->execute();
@@ -71,10 +71,6 @@ class PasswordModel
                 return "SERVER_ERROR";
             }
             // generate hashcode using bcrypt technique with cost 10
-            // $options = [
-        	//     'cost' => 10
-            // ];
-            // $hashCode = password_hash($requestValue['password'], PASSWORD_BCRYPT, $options);
             $hashCode=hashCode($requestValue['password']);
             //enter the new password and make it active
             $fmquery = $fm->newAddCommand("UserCredentialsLayout");
@@ -86,7 +82,7 @@ class PasswordModel
             if ($fm::isError($result)) {
                 return "SERVER_ERROR";
             }
-            return "CHANGED";
+            return "PASSWORD_CHANGED";
         }
         return "PASSWORD_NOT_MATCHED";
     }

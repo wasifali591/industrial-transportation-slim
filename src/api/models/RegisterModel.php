@@ -49,11 +49,12 @@ class RegisterModel
             $result = $fmquery->execute();
 
             if ($fm::isError($result)) {
-                return false;
+                return "SERVER_ERROR";
             }
         }else{
-            return "registered";
+            return "ALREADY_REGISTERED";
         }
+        return "SUCCESSFULLY_REGISTER";
         
     }
 }

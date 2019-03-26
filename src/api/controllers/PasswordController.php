@@ -24,6 +24,7 @@ require_once __DIR__ . '/../../constants/StatusCode.php';
 class PasswordController
 {
     public $container; //variable to contain the db instance
+    public $settings; //variable to contain the settings
 
     /**
      * a constructor to initialize the FileMaker instance and get the settings
@@ -32,6 +33,7 @@ class PasswordController
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container->get('db');
+        $this->settings = $container->get('settings');
     }
 
     /**
@@ -48,7 +50,7 @@ class PasswordController
         $decoded = JWT::decode($str_arr[1], "truckage", array('HS256'));
         $decoded_array = (array) $decoded;
         $id=$decoded_array['id'];
-
+        
         //read input
         $oldPassword=$request->getParsedBody()['oldPassword'];
         $newPassword=$request->getParsedBody()['newPassword'];
@@ -81,19 +83,9 @@ class PasswordController
         //creating an instance of PasswordModel
         $passwordModel = new PasswordModel();
         $value = $passwordModel->changePassswordModel($requestValue,$this->container);
-        if($value=="USER_NOT_MATCHED"){
-            return $response->withJSON(['error' => true, 'message' => 'User not found. Please register first.'], USER_NOT_FOUND);
-        }
-        if($value=="PASSWORD_NOT_MATCHED"){
-            
-            return $response->withJSON(['error' => true, 'message' => 'Current Password is not correct.'], INVALID_CREDINTIAL);
-        }
-        if($value=="OLD_PASSWORD"){
-            return $response->withJSON(['error' => true, 'message' => 'Your new password is previously used.Try with a different password'], USER_NOT_FOUND);
-        }
-        if($value=="CHANGED"){
-            return $response->withJSON(['message' => 'Yor password is successfully changed.'], NEW_RECORD_CREATED);
-        }
+        //get the settings for responseMessage
+        $errorMessage=$this->settings['responsMessage'];
+        
+        return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);
     }
 }
-

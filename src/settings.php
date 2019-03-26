@@ -29,5 +29,31 @@ return [
             'secret' => 'truckage'
         ],
 
+        //responsMessage for each type of response and their corrosponding message and status code
+        'responsMessage'=>[
+            'SERVER_ERROR'=>['error'=>true,
+                             'message'=>'Internal server error.',
+                             'statusCode'=>500],
+            'USER_NOT_MATCHED'=>['error'=>true,
+                                 'message'=>'User not found. Please register first.',
+                                 'statusCode'=>400],
+            'OLD_PASSWORD'=>['error'=>true,
+                             'message'=>'Your new password is previously used.Try with a different password',
+                             'statusCode'=>400],
+            'PASSWORD_CHANGED'=>['error'=>false,
+                             'message'=>'Yor password is successfully changed.',
+                             'statusCode'=>201],
+            'PASSWORD_NOT_MATCHED'=>['error'=>true,
+                             'message'=>'Current Password is not correct.',
+                             'statusCode'=>403],
+            'ALREADY_REGISTERED'=>['error'=>true,
+                             'message'=>'Already Registered. Try with another email.',
+                             'statusCode'=>409],
+            'SUCCESSFULLY_REGISTER'=>['error'=>false,
+                             'message'=>'Successfully registered.',
+                             'statusCode'=>201],
+            
+        ],
+
     ],
 ];

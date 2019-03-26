@@ -26,6 +26,7 @@ require_once __DIR__ .'/../services/HashCode.php';
 class RegisterController
 {
 	public $container; //variable to contain the db instance
+	public $settings; //variable to contain the settings
 
 	/**
      * a constructor to initialize the FileMaker instance and get the settings
@@ -34,6 +35,7 @@ class RegisterController
 	public function __construct(ContainerInterface $container)
 	{
 		$this->container = $container->get('db');
+		$this->settings = $container->get('settings');
 	}
 
 	/**
@@ -94,16 +96,10 @@ class RegisterController
 		//instance of RegisterModel
 		$registration = new RegisterModel();
 		//function(Registration) call
-		$result = $registration->Registration($requestValue, $this->container);
-
-		if ($result == "registered") {
-			return $response->withJSON(['error' => true, 'message' => 'Already Registered. Try with another email.'], CONFLICT_CONTENT);
-		}
-
-		if ($result) {
-			return $response->withJSON(['error' => true, 'message' => 'Registration failed.'], INTERNAL_SERVER_ERROR);
-		}
-		
-		return $response->withJSON(['message' => 'Successfully registered.'], NEW_RECORD_CREATED);
+		$value = $registration->Registration($requestValue, $this->container);
+		//get the settings for responseMessage
+        $errorMessage=$this->settings['responsMessage'];
+        
+        return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);
 	}
 }
