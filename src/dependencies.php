@@ -47,3 +47,7 @@
     $container['UserProfileController']=function($c){
         return new App\api\controllers\UserProfileController($c);
     };
+    
+    $container['DocumentsController']=function($c){
+        return new App\api\controllers\DocumentsController($c);
+    };

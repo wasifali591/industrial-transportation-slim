@@ -17,6 +17,7 @@ use Slim\Http\UploadedFile;
 use App\api\models\UserProfileModel;
 
 require_once __DIR__ . '/../../constants/StatusCode.php';
+require_once __DIR__ .'/../services/DecodeToken.php';
 
 /**
  * class-name:UserProfileController
@@ -26,7 +27,6 @@ class UserProfileController
 {
     public $container; //variable to contain the db instance
     public $settings; //variable to contain the settings
-    public $directory = 'D:\industrial-transportation-slim\UserDocuments'; //path of the directory where all the documents are sgtored
 
     /**
      * a constructor to initialize the FileMaker instance and get the settings
@@ -45,13 +45,8 @@ class UserProfileController
      */
     public function updateUserProfile($request, $response)
     {
-        //read the token from header and from the token decode the id of the user
-        $headers = apache_request_headers();
-        $string = $headers['Authorization'];
-        $str_arr = preg_split("/\ /", $string);
-        $decoded = JWT::decode($str_arr[1], "truckage", array('HS256'));
-        $decoded_array = (array)$decoded;
-        $id = $decoded_array['id'];
+        //get the userID from token
+        $id = decodeToken();
 
         //read the input
         $gender = $request->getParsedBody()['gender'];
@@ -59,8 +54,6 @@ class UserProfileController
         $mobile = $request->getParsedBody()['mobileNumber'];
         $idType = $request->getParsedBody()['idType'];
         $idNumber = $request->getParsedBody()['idNumber'];
-        // $files = $request->getUploadedFiles();
-        // $uploadFile = $files['document'];
         $locality = $request->getParsedBody()['locality'];
         $landmark = $request->getParsedBody()['landmark'];
         $country = $request->getParsedBody()['country'];
@@ -80,44 +73,29 @@ class UserProfileController
             "mobile"=>$mobile,
 			"idType" => $idType,
             "idNumber"=>$idNumber,
-            //"uploadFile"=>$uploadFile,
             "locality"=>$locality,
             "landmark"=>$landmark,
             "country"=>$country,
             "city"=>$city,
             "postalCode"=>$postalCode
         );
-         //creating an instance of PasswordModel
-         $userProfileModel = new UserProfileModel();
-         $value = $userProfileModel->updateUserProfileModel($requestValue,$this->container);
-
-         if($value=="SERVER_ERROR"){
-             return $response->withJSON(['error' => true, 'message' => 'Internal server error'], INTERNAL_SERVER_ERROR);
-         }
-
-         if($value=="USER_NOT_MATCHED"){
-            return $response->withJSON(['error' => true, 'message' => 'User not found. Please register first.'], USER_NOT_FOUND);
-        }
-
-        if($value=="UPDATED"){
-            return $response->withJSON(['message' => 'Yor profile is successfully updated.'], SUCCESS_RESPONSE);
-        }
+        //creating an instance of PasswordModel
+        $userProfileModel = new UserProfileModel();
+        $value = $userProfileModel->updateUserProfileModel($requestValue,$this->container);
+        //get the settings for responseMessage
+        $errorMessage=$this->settings['responsMessage'];
         
+        return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);
+    }
+
+    public function viewUserProfile($request, $response){
+        //get the userID from token
+        $id = decodeToken();
+        $userProfile=new UserProfileModel();
+        $value = $userProfile->viewUserProfile($id,$this->container);
+
     }
 
     
-    public function uploadImage($imageName, $id)
-    {   
-        if ($uploadFile->getError() === UPLOAD_ERR_OK) {
-            $filename = $this->moveUploadedFile($this->directory, $uploadFile, $id,$idType);
-            return $response->withJSON(['message' => 'uploaded'], 201);
-        }
-
-
-        $fmquery = $this->container->newAddCommand("UserDocumentLayout");
-        $fmquery->setField("__kf_UserId_xn", $id);
-        $fmquery->setField("Document_xr", $imageName);
-        $result = $fmquery->execute();
-        return $result;
-    }
+    
 }

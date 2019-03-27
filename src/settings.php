@@ -52,6 +52,12 @@ return [
             'SUCCESSFULLY_REGISTER'=>['error'=>false,
                              'message'=>'Successfully registered.',
                              'statusCode'=>201],
+            'UPDATE_SUCCESSFULLY'=>['error'=>false,
+                             'message'=>'Successfully uptadeted.',
+                             'statusCode'=>201],
+            'DOCUMENT_NOT_FOUND'=>['error'=>true,
+                             'message'=>'Document not found.',
+                             'statusCode'=>404],
             
         ],
 

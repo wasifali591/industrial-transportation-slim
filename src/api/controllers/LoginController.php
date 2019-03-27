@@ -22,6 +22,10 @@ require_once __DIR__ . '/../../constants/EndPoints.php';
  * description:
  */
 class LoginController{
+    /**
+     * Used to contain db instance 
+     * @var Object
+     */
     public $container; //variable to contain the db instance
     public $settings; //variable to contain the settings
 
@@ -78,7 +82,7 @@ class LoginController{
         //if the input password is matched(email is checked before and the corrosponding passwoird is matched) with db then return a response(token)
         if (password_verify($password, $loginResponse['password'])) {
             $token = JWT::encode(['id' => $loginResponse['id'], 'email' => $Email], $this->settings['jwt']['secret'], "HS256");
-            return $response->withJSON(['token' => $token], SUCCESS_RESPONSE);
+            return $response->withJSON(['token' => $token,'email'=>$Email], SUCCESS_RESPONSE);
         }
         //if the input password is matched with db(email is found but the corrosponding passwoird is not matche with the input) then return an error message
         return $response->withJSON(['error' => true, 'message' => 'Invalid Email or Password.'], INVALID_CREDINTIAL);

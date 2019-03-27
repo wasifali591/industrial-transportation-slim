@@ -11,10 +11,10 @@ use Slim\Http\UploadedFile;
 
 /**
  * function-name:moveUploadedFile
- * @param $directory
- * @param $uploadedFile
- * @param $id
- * @param $idType
+ * @param string $directory path of the directory where the file will store
+ * @param UploadedFile $uploadedFile the file 
+ * @param number $id user id of the user
+ * @param string $idType which type of documents are want to upload
  * description: move the uploaded file to destination folder, and rename the file 
 */
 
@@ -22,12 +22,11 @@ function moveUploadedFile($directory, UploadedFile  $uploadedFile, $id, $idType)
 {
     $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
     $basename = $idType;
-    $name = $id . $basename . '.' . $extension;
-    $result = $this->uploadImage($name, $id);
-    if ($result) {
-        $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $name);
-        return $name;
+    $name = $id .'_'. $basename . '.' . $extension;
+    if (file_exists($directory.'/'.$name)){
+         unlink($directory.'/'.$name);
     }
-    return false;
+    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $name);
+    return $name;
 }
 

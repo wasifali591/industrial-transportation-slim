@@ -10,12 +10,12 @@ namespace App\api\controllers;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
-use \Firebase\JWT\JWT;
 use Interop\Container\ContainerInterface;
 use App\api\models\PasswordModel;
 use App\api\services\Validator;
 
 require_once __DIR__ . '/../../constants/StatusCode.php';
+require_once __DIR__ .'/../services/DecodeToken.php';
 
 /**
  * class-name:PasswordController
@@ -43,14 +43,8 @@ class PasswordController
      * description: read the input and chek for validation , for valid input check in the db and update
      */
     public function changePassword($request, $response){
-        //read the token from header and from the token decode the id of the user    
-        $headers = apache_request_headers();
-        $string = $headers['Authorization'];  
-        $str_arr = preg_split ("/\ /", $string);  
-        $decoded = JWT::decode($str_arr[1], "truckage", array('HS256'));
-        $decoded_array = (array) $decoded;
-        $id=$decoded_array['id'];
-        
+        //get userID from token    
+        $id=decodeToken();
         //read input
         $oldPassword=$request->getParsedBody()['oldPassword'];
         $newPassword=$request->getParsedBody()['newPassword'];
