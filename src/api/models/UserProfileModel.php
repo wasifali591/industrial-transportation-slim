@@ -1,16 +1,15 @@
 <?php
 /**
  * File Name  : UserProfileModel
-* Description : insert and fetch user information from database 
+* Description : insert and fetch user information from database
 * Created date : 26/03/2019
 * Author  : Md Wasif Ali
-* Comments : 
+* Comments :
  */
 
 namespace App\api\models;
 
 use Pimple\Psr11\Container;
-
 
 /**
  * class-name:UserProfileModel
@@ -53,7 +52,8 @@ class UserProfileModel
         return "UPDATE_SUCCESSFULLY";
     }
 
-    public function viewUserProfile($id, $container){
+    public function viewUserProfile($id, $container)
+    {
         $fm = Container;
         $fmquery = $fm->newFindCommand("UserLayout");
         $fmquery->addFindCriterion('___kp_UserId_xn', '==' . $id);

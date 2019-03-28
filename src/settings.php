@@ -44,7 +44,7 @@ return [
                              'message'=>'Yor password is successfully changed.',
                              'statusCode'=>201],
             'PASSWORD_NOT_MATCHED'=>['error'=>true,
-                             'message'=>'Current Password is not correct.',
+                             'message'=>'Password is not correct.',
                              'statusCode'=>403],
             'ALREADY_REGISTERED'=>['error'=>true,
                              'message'=>'Already Registered. Try with another email.',

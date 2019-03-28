@@ -22,7 +22,7 @@
     $container['db'] = function ($c) {
         $settings = $c->get('settings')['db'];
 
-        require_once('../FileMakerCWP/FileMaker.php');
+        require_once __DIR__ .'/library/FileMakerCWP/FileMaker.php';
 
         $fm = new FileMaker();
         $fm->setProperty('database', $settings['database']);

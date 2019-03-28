@@ -1,10 +1,10 @@
 <?php
 /**
  * File Name  : LoginModel
-* Description : php code to check the input(username and password), which is taken from angular form and check with databse and  return a response 
+* Description : php code to check the input(username and password), which is taken from angular form and check with databse and  return a response
 * Created date : 19/03/2019
 * Author  : Md Wasif Ali
-* Comments : 
+* Comments :
  */
 namespace App\api\models;
 
@@ -14,14 +14,16 @@ namespace App\api\models;
  * class-name:LoginModel
  * description:
  */
-class LoginModel{
+class LoginModel
+{
     /**
      * function-name:checkLogin
      * @param $Email
      * @param $container
-     * description: find the $Email  is present in the db or not, if present then find the corosponding password and return 
+     * description: find the $Email  is present in the db or not, if present then find the corosponding password and return
      */
-    public function checkLoginModel(string $Email, $container){
+    public function checkLoginModel(string $Email, $container)
+    {
         $fm = $container;
         $flag="active";
         //find the $Email in db(USerLayout)
@@ -31,23 +33,24 @@ class LoginModel{
 
         //if $Email not found return false
         if ($fm::isError($result)) {
-            return false;
+            return "USER_NOT_MATCHED";
         }
         //if $Email found then find the corosponding password
         $records = $result->getRecords();
         $record = $records[0];
         $currentId = $record->getField('___kp_UserId_xn');
+        $firstNam=$record->getField('UserFirstName_xt');
+        $lastName=$record->getField('UserLastName_xt');
         //find active password corosponding to the CurrentId
         $fmquery = $fm->newFindCommand("UserCredentialsLayout");
         $fmquery->setLogicalOperator('FILEMAKER_FIND_AND');
         $fmquery->addFindCriterion('__kf_UserId_xn', '==' . $currentId);
         $fmquery->addFindCriterion('Flag_xt', '==' . $flag);
         $result = $fmquery->execute();
-
-        // //if $currentId not found return false
-        // if ($fm::isError($result1)) {
-        //     exit();
-        // }
+        if ($fm::isError($result)) {
+            return "PASSWORD_NOT_MATCHED";
+        }
+        
         $records = $result->getRecords();
         $record = $records[0];
         $hash = $record->getField('Password_xt');
@@ -55,6 +58,8 @@ class LoginModel{
         //an array($loginResponse) to sore the user id and the password(hash)
         $loginResponse = array(
             "id" => $currentId,
+            "firstName"=>$firstNam,
+            "lastName"=>$lastName,
             "password" => $hash
         );
 

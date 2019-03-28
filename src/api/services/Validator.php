@@ -4,7 +4,7 @@
 * Description : check validation of required field
 * Created date : 19/03/2019
 * Author  : Md Wasif Ali
-* Comments : 
+* Comments :
  */
 
  namespace App\api\services;
@@ -15,12 +15,14 @@ require_once __DIR__ . '/../../constants/StatusCode.php';
  * class-name:Validator
  * description: validate the data according to need
  */
-class Validator{
+class Validator
+{
     /**
      * function-name:validateEmail
      * description:
      */
-    function validateEmail(string $Email){
+    public function validateEmail(string $Email)
+    {
         if (filter_var($Email, FILTER_VALIDATE_EMAIL)) {
             return true;
         }
@@ -31,7 +33,8 @@ class Validator{
      * function-name:validatePassword
      * description:
      */
-    function validatePassword(string $password){
+    public function validatePassword(string $password)
+    {
         if (preg_match('/^(?=.*\d)(?=.*[A-Za-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/', $password)) {
             return true;
         }

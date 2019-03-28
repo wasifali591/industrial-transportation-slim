@@ -4,7 +4,7 @@
 * Description : php code to insert input date into db
 * Created date : 19/03/2019
 * Author  : Md Wasif Ali
-* Comments : 
+* Comments :
  */
 
 namespace App\api\models;
@@ -19,7 +19,7 @@ class RegisterModel
      * function-name:Registration
      * @param $requestValue
      * @param $container
-     * description: insert input data into their corosponding tables 
+     * description: insert input data into their corosponding tables
      */
     public function Registration(array $requestValue, $container)
     {
@@ -45,17 +45,15 @@ class RegisterModel
             $fmquery = $fm->newAddCommand("UserCredentialsLayout");
             $fmquery->setField("__kf_UserId_xn", $lastID);
             $fmquery->setField("Password_xt", $requestValue['password']);
-            $fmquery->setField("Flag_xt","active");
+            $fmquery->setField("Flag_xt", "active");
             $result = $fmquery->execute();
 
             if ($fm::isError($result)) {
                 return "SERVER_ERROR";
             }
-        }else{
+        } else {
             return "ALREADY_REGISTERED";
         }
         return "SUCCESSFULLY_REGISTER";
-        
     }
 }
-

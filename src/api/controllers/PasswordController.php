@@ -4,7 +4,7 @@
 * Description : php code to  change password in db
 * Created date : 19/03/2019
 * Author  : Md Wasif Ali
-* Comments : 
+* Comments :
  */
 namespace App\api\controllers;
 
@@ -42,8 +42,9 @@ class PasswordController
      * @param $request
      * description: read the input and chek for validation , for valid input check in the db and update
      */
-    public function changePassword($request, $response){
-        //get userID from token    
+    public function changePassword($request, $response)
+    {
+        //get userID from token
         $id=decodeToken();
         //read input
         $oldPassword=$request->getParsedBody()['oldPassword'];
@@ -52,31 +53,31 @@ class PasswordController
 
         // Checking if any of the fields are empty
         if ($confirmNewPassword == '' || $oldPassword == '' || $newPassword=='') {
-        	return $response->withJSON(['error' => true, 'message' => 'Enter the required field.'], NOT_ACCEPTABLE);
+            return $response->withJSON(['error' => true, 'message' => 'Enter the required field.'], NOT_ACCEPTABLE);
         }
         //create instance of Validator
-		$validator = new Validator();
+        $validator = new Validator();
         //function(ValidatePassword) call to check password validation
         $validatePassword = $validator->validatePassword($newPassword);
 
-		//if password is not matched with the required pattern the return an error with an error message
-		if (!$validatePassword) {
-			return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], UNAUTHORIZED_USER);
-		}
+        //if password is not matched with the required pattern the return an error with an error message
+        if (!$validatePassword) {
+            return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], UNAUTHORIZED_USER);
+        }
 
         //check newPassword and confirmNewPassword is matched or not
-        if($newPassword!=$confirmNewPassword){
+        if ($newPassword!=$confirmNewPassword) {
             return $response->withJSON(['error' => true, 'message' => 'Password and Conform Password are not match.'], INVALID_CREDINTIAL);
         }
-        //$requestValue is an array hold related data, which is needed to change password 
+        //$requestValue is an array hold related data, which is needed to change password
         $requestValue = array(
             "id"=>$id,
-        	"oldPassword" => $oldPassword,
-        	"password" => $newPassword
+            "oldPassword" => $oldPassword,
+            "password" => $newPassword
         );
         //creating an instance of PasswordModel
         $passwordModel = new PasswordModel();
-        $value = $passwordModel->changePassswordModel($requestValue,$this->container);
+        $value = $passwordModel->changePassswordModel($requestValue, $this->container);
         //get the settings for responseMessage
         $errorMessage=$this->settings['responsMessage'];
         
