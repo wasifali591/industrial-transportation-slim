@@ -1,10 +1,13 @@
 <?php
 /**
- * File Name  : RegisterController
-* Description : php code to take input from angular form and insert into db
-* Created date : 19/03/2019
-* Author  : Md Wasif Ali
-* Comments :
+ * Register Controller
+ *
+ * Receive all the input from client side, perform registration operarion
+ * and return response according to the situation
+ * Created date : 19/03/2019
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
  */
 
 namespace App\api\controllers;
@@ -20,17 +23,31 @@ require_once __DIR__ . '/../../constants/StatusCode.php';
 require_once __DIR__ .'/../services/HashCode.php';
 
 /**
- * class-name:RegisterController
- * description:
+ * Register Controller
+ *
+ * Contain two property($container, $settings) one constructor and
+ * one method(register)
  */
 class RegisterController
 {
-    public $container; //variable to contain the db instance
-    public $settings; //variable to contain the settings
+    /**
+     * Used to contain db instance
+     *
+     * @var Object
+     */
+    public $container;
 
     /**
-     * a constructor to initialize the FileMaker instance and get the settings
-     * @param $container
+     * Used to contain settings
+     *
+     * @var Object
+     */
+    public $settings;
+
+    /**
+     *  Initialize the FileMaker instance and get the settings
+     *
+     * @param object $container contain information related to db
      */
     public function __construct(ContainerInterface $container)
     {
@@ -39,14 +56,21 @@ class RegisterController
     }
 
     /**
-     * function-name:Register
-     * @param $request
-     * @param $request
-     * description: read the input and chek for validation , for valid data insert into db
+     * Method for register
+     *
+     * Read input and check if the inputs are empty or not, if not empty then
+     * check for proper validation, if validate data are present then perform
+     * the rest of registration. Rerturn message according to the situation
+     *
+     * @param  object $request  represents the current HTTP request received
+     *                          by the web server
+     * @param  object $response represents the current HTTP response to be
+     *                          returned to the client.
+     * @return object
      */
     public function register(Request $request, Response $response)
     {
-        // Receiving values from Angular and assigning it to a variable
+        // Receiving values from client side and assigning it to a variable
         $firstName = $request->getParsedBody()['firstName'];
         $lastName = $request->getParsedBody()['lastName'];
         $Email = $request->getParsedBody()['email'];
@@ -55,37 +79,54 @@ class RegisterController
         $confirmPassword = $request->getParsedBody()['confirmPassword'];
 
         // Checking if any of the fields are empty
-        if ($firstName == '' || $lastName == '' || $Email == '' || $userType == '' || $password == '' || $confirmPassword == '') {
-            return $response->withJSON(['error' => true, 'message' => 'Enter the required field.'], NOT_ACCEPTABLE);
+        if (empty($firstName) || empty($lastName) || empty($Email)
+            || empty($userType) || empty($password) || empty($confirmPassword)
+        ) {
+            return $response->withJSON(
+                ['error' => true, 'message' => 'Enter the required field.'],
+                NOT_ACCEPTABLE
+            );
         }
-        //create instance of Validator
+        /**
+         * Used to store instance of Validator
+         *
+         * @var object
+         */
         $validator = new Validator();
-        //function(ValidateEmail) call to check email validation
         $validateEmail = $validator->validateEmail($Email);
 
         //if invalid email then return an error with an error message
         if (!$validateEmail) {
             return $response->withJSON(['error' => true, 'message' => 'Enter valid Email.'], UNAUTHORIZED_USER);
         }
-        //function(ValidatePassword) call to check password validation
         $validatePassword = $validator->validatePassword($password);
 
-        //if password is not matched with the required pattern the return an error with an error message
+        /**
+         *If password is not matched with the required pattern the return an
+         *error with an error message
+         */
         if (!$validatePassword) {
-            return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], UNAUTHORIZED_USER);
+            return $response->withJSON(
+                ['error' => true, 'message' => 'Enter valid Password.'],
+                UNAUTHORIZED_USER
+            );
         }
+
         //if password and confirm password are not match return an error message
         if ($password !== $confirmPassword) {
             return $response->withJSON(['error' => true, 'message' => 'Password and Conform Password are not match.'], INVALID_CREDINTIAL);
         }
-
-        // generate hashcode using bcrypt technique with cost 10
-        // $options = [
-        // 	'cost' => 10
-        // ];
-        // $hashCode = password_hash($password, PASSWORD_BCRYPT, $options);
+        /**
+         * Used to store the hash code of $password genated by a function(hashCode)
+         *
+         * @var string
+         */
         $hashCode=hashCode($password);
-        //makeing an array of valid inputs
+        /**
+         * Used to store value of valid inputs
+         *
+         * @var array
+         */
         $requestValue = array(
             "userType" => $userType,
             "firstName" => $firstName,
@@ -93,13 +134,24 @@ class RegisterController
             "email" => $Email,
             "password" => $hashCode
         );
-        //instance of RegisterModel
+        /**
+         * Used to store instance of RegisterModel
+         *
+         * @var object
+         */
         $registration = new RegisterModel();
-        //function(Registration) call
-        $value = $registration->Registration($requestValue, $this->container);
-        //get the settings for responseMessage
+        $value = $registration->registration($requestValue, $this->container);
+        /**
+         * Used to store responseMessage setting
+         *
+         * @var array
+         */
         $errorMessage=$this->settings['responsMessage'];
         
-        return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);
+        return $response->withJSON(
+            ['error' => $errorMessage[$value]['error'],
+             'message' => $errorMessage[$value]['message']],
+            $errorMessage[$value]['statusCode']
+        );
     }
 }

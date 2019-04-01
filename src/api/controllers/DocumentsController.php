@@ -18,6 +18,7 @@ use App\api\models\DocumentsModel;
 use Interop\Container\ContainerInterface;
 
 require_once __DIR__ .'/../services/DecodeToken.php';
+require_once __DIR__ .'/../../constants/StatusCode.php';
 
 /**
  * Documents controller
@@ -63,7 +64,7 @@ class DocumentsController
      * @param  object $response represents the current HTTP response to be
      *                          returned to the client.
      * @param  array  $args     store the values send through url
-     * @return object return response object with JSON format
+     * @return object           return response object with JSON format
      */
     public function uploadDocument($request, $response, $args)
     {

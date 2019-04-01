@@ -20,8 +20,15 @@ class DocumentsModel
         if ($fm::isError($result)) {
             return 'USER_NOT_MATCHED';
         }
-        //if userID found then find the corosponding passwor
+        
         $GovernmentIdType=$requestValue['documentType'];
+        
+        /**
+         * If the GovernmentIdType is not empty thats mean the api is receiving
+         * something, which is the "ProfilePic" is not stored in database as a
+         * document type. If GovernmentIdType isempty then get the idType from
+         * the db 
+         */
         if ($GovernmentIdType==='') {
             $records = $result->getRecords();
             $record = $records[0];
@@ -52,7 +59,7 @@ class DocumentsModel
         }
         $records = $result->getRecords();
 
-        //find the documentb in db
+        //find the document in db
         foreach ($records as $record) {
             $document=$record->getField('Document_xr');
             $str_arr = preg_split("/\//", $document);

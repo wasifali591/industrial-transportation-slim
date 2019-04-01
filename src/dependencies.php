@@ -22,7 +22,7 @@
     $container['db'] = function ($c) {
         $settings = $c->get('settings')['db'];
 
-        require_once __DIR__ .'/library/FileMakerCWP/FileMaker.php';
+        include __DIR__ .'/library/FileMakerCWP/FileMaker.php';
 
         $fm = new FileMaker();
         $fm->setProperty('database', $settings['database']);
@@ -36,18 +36,18 @@
         return new App\api\controllers\LoginController($c);
     };
 
-    $container['RegisterController']=function($c){
+    $container['RegisterController']=function ($c) {
         return new App\api\controllers\RegisterController($c);
     };
 
-    $container['PasswordController']=function($c){
+    $container['PasswordController']=function ($c) {
         return new App\api\controllers\PasswordController($c);
     };
 
-    $container['UserProfileController']=function($c){
+    $container['UserProfileController']=function ($c) {
         return new App\api\controllers\UserProfileController($c);
     };
     
-    $container['DocumentsController']=function($c){
-        return new App\api\controllers\DocumentsController($c);
+    $container['TruckController']=function ($c) {
+        return new App\api\controllers\TruckController($c);
     };
