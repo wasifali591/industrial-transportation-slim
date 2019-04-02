@@ -66,6 +66,7 @@ class RegisterController
      *                          by the web server
      * @param  object $response represents the current HTTP response to be
      *                          returned to the client.
+     * 
      * @return object
      */
     public function register(Request $request, Response $response)

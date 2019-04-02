@@ -11,8 +11,10 @@
 
 namespace App\api\controllers;
 
+use Slim\Http\UploadedFile;
 use Interop\Container\ContainerInterface;
 use App\api\models\TruckModel;
+use App\api\models\TruckDocumentModel;
 
 require_once __DIR__ . '/../../constants/EndPoints.php';
 require_once __DIR__ .'/../services/DecodeToken.php';
@@ -56,10 +58,11 @@ class TruckController
      * Rertrive the user id fom token. Take input and check for validate data,
      * return proper response in json format
      *
-     * @param  object $request  represents the current HTTP request received
-     *                          by the web server
-     * @param  object $response represents the current HTTP response to be
-     *                          returned to the client.
+     * @param object $request  represents the current HTTP request received
+     *                         by the web server
+     * @param object $response represents the current HTTP response to be
+     *                         returned to the client.
+     *
      * @return object return response object with JSON format
      */
     public function uploadTruckDetails($request, $response)
@@ -68,9 +71,22 @@ class TruckController
         $id=decodeToken();
         //read input
         $truckType = $request->getParsedBody()['truckType'];
-        $manufacturedDate = $request->getParsedBody()['manufacturedDate'];
-        $licenceNumber = $request->getParsedBody()['licenceNumber'];
-
+        $manufacturedDate = $request->getParsedBody()['truckManufacturedDate'];
+        $licenceNumber = $request->getParsedBody()['licensePlateNumber'];
+        /**
+         * Used to store getUploadedFiles function reference
+         *
+         * @var object
+         */
+        $files = $request->getUploadedFiles();
+        /**
+         * Used to store property of the uploaded document
+         *
+         * @var array
+         */
+        $registrationCertificate = $files['registrationCertificate'];
+        $insurancePaper = $files['insuranceDocument'];
+        $polutionCertificate = $files['pollutionDocument'];
         //if required inputs are emty then return an error with an error message
         if (empty($truckType) || empty($manufacturedDate) || empty($licenceNumber)) {
             return $response->withJSON(
@@ -110,7 +126,64 @@ class TruckController
                 $errorMessage[$value]['statusCode']
             );
         }
-        $truckId=$value['___kp_TruckId_xn'];
-        
+        return $response->withJSON(
+            ['error' => false,
+            'message' => "Truck added"],
+            201
+        );
+        // $truckId=$value['___kp_TruckId_xn'];
+        // $requestValue = array(
+        //     "registrationCertificate" => $registrationCertificate,
+        //     "insurancePaper" => $insurancePaper,
+        //     "polutionCertificate" => $polutionCertificate
+        // );
+        // /**
+        //  * Used to store instance of TruckDocumnetsModel
+        //  *
+        //  * @var Object
+        //  */
+        // $truckController=new TruckDocumentModel();
+        // $value=$truckController->uploadTruckDocument($truckId, $requestValue, $this->container);
+    }
+
+    /**
+     * Fetch truck details
+     *
+     * @param object $request  represents the current HTTP request received
+     *                         by the web server
+     * @param object $response represents the current HTTP response to be
+     *                         returned to the client.
+     *
+     * @return object return response object with JSON format
+     */
+    public function fetchTeuckDetails($request, $response)
+    {
+        //get userID from token
+        $id=decodeToken();
+        $requestValue = array(
+            "id"=>$id
+        );
+        /**
+         * Used to store instance of TruckModel
+         *
+         * @var Object
+         */
+        $truckController=new TruckModel();
+        $value=$truckController->fetchTruckDetails($requestValue, $this->container);
+    
+        if (is_string($value)) {
+            /**
+             * Used to store responseMessage setting
+             *
+             * @var array
+            */
+            $errorMessage=$this->settings['responsMessage'];
+            return $response->withJSON(
+                ['error' => $errorMessage[$value]['error'],
+                'message' => $errorMessage[$value]['message']],
+                $errorMessage[$value]['statusCode']
+            );
+        }
+        return $response->withJSON($value, 200);
     }
 }

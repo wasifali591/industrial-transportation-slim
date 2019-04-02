@@ -19,9 +19,10 @@ class TruckModel
     /**
      * Insert the truck details into the db
      *
-     * @param  array  $requestValue hold the value to be insert into db
-     * @param  object $container    hold the db instance
-     * @return
+     * @param array  $requestValue hold the value to be insert into db
+     * @param object $container    hold the db instance
+     * 
+     * @return multiple types of return according to the situation
      */
     public function uploadTruckDetails($requestValue, $container)
     {
@@ -53,5 +54,35 @@ class TruckModel
             return $result;
         }
         return "TRUCK_ALREADY_REGISTERED";
+    }
+
+    /**
+     * Fetch truck details from the db
+     *
+     * @param array  $requestValue hold the value to be insert into db
+     * @param object $container    hold the db instance
+     * 
+     * @return multiple types of return according to the situation
+     */
+    public function fetchTruckDetails($requestValue, $container)
+    {
+        /**
+         * Used to store db information
+         *
+         * @var object
+         */
+        $fm = $container;
+        /**
+         * Used to store instance of CRUDOperation
+         *
+         * @var object
+         */
+        $crud=new CRUDOperation();
+        $fieldsName=array(
+            "__fk_UserId_xn"=>$requestValue['id']
+        );
+        $result=$crud->fetchRecord($this->_layoutName, $fieldsName, $fm);
+        return $result;
+
     }
 }

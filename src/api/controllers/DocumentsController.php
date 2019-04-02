@@ -59,11 +59,12 @@ class DocumentsController
      * Take uploaded files, fetch userID from token, call function(uploadDocument)
      * to insert document into db and return response according to the situatuon
      * 
-     * @param  object $request  represents the current HTTP request received
-     *                          by the web server
-     * @param  object $response represents the current HTTP response to be
-     *                          returned to the client.
-     * @param  array  $args     store the values send through url
+     * @param object $request  represents the current HTTP request received
+     *                         by the web server
+     * @param object $response represents the current HTTP response to be
+     *                         returned to the client.
+     * @param array  $args     store the values send through url
+     * 
      * @return object           return response object with JSON format
      */
     public function uploadDocument($request, $response, $args)

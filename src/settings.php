@@ -52,6 +52,9 @@ return [
             'TRUCK_ALREADY_REGISTERED'=>['error'=>true,
                              'message'=>'Truck is already registered.',
                              'statusCode'=>409],
+            'NOT_FOUND'=>['error'=>true,
+                             'message'=>'Not found.',
+                             'statusCode'=>404],
 
             'PASSWORD_CHANGED'=>['error'=>false,
                              'message'=>'Yor password is successfully changed.',

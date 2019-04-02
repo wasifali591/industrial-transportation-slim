@@ -1,10 +1,13 @@
 <?php
 /**
- * File Name  : LoginModel
-* Description : php code to check the input(username and password), which is taken from angular form and check with databse and  return a response
-* Created date : 19/03/2019
-* Author  : Md Wasif Ali
-* Comments :
+ * Login
+ * 
+ * Check the input(username and password), which is taken from angular
+ * form and check with databse and  return a response
+ * Created date : 19/03/2019
+ * 
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
  */
 namespace App\api\models;
 
@@ -17,25 +20,27 @@ namespace App\api\models;
 class LoginModel
 {
     /**
-     * function-name:checkLogin
-     * @param $Email
-     * @param $container
-     * description: find the $Email  is present in the db or not, if present then find the corosponding password and return
+     * Find the $Email  is present in the db or not, if present then find the
+     * corosponding password and return
+     * 
+     * @param string $email 
+     * @param object $container
+     * description: 
      */
-    public function checkLoginModel(string $Email, $container)
+    public function checkLoginModel(string $email, $container)
     {
         $fm = $container;
         $flag="active";
         //find the $Email in db(USerLayout)
         $fmquery = $fm->newFindCommand("UserLayout");
-        $fmquery->addFindCriterion('Email_xt', '==' . $Email);
+        $fmquery->addFindCriterion('Email_xt', '==' . $email);
         $result = $fmquery->execute();
 
-        //if $Email not found return false
+        //if $email not found return false
         if ($fm::isError($result)) {
             return "USER_NOT_MATCHED";
         }
-        //if $Email found then find the corosponding password
+        //if $email found then find the corosponding password
         $records = $result->getRecords();
         $record = $records[0];
         $currentId = $record->getField('___kp_UserId_xn');

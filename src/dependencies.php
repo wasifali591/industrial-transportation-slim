@@ -35,19 +35,18 @@
     $container['LoginController'] = function ($c) {
         return new App\api\controllers\LoginController($c);
     };
-
     $container['RegisterController']=function ($c) {
         return new App\api\controllers\RegisterController($c);
     };
-
     $container['PasswordController']=function ($c) {
         return new App\api\controllers\PasswordController($c);
     };
-
     $container['UserProfileController']=function ($c) {
         return new App\api\controllers\UserProfileController($c);
     };
-    
+    $container['DocumentsController']=function ($c) {
+        return new App\api\controllers\DocumentsController($c);
+    };    
     $container['TruckController']=function ($c) {
         return new App\api\controllers\TruckController($c);
     };

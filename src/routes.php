@@ -37,5 +37,6 @@ $app->group(
         $app->post(UPDATE_TRUCK_INFORMATION_API_END_POINT, 'TruckController:uploadTruckDetails');
 
         $app->get(VIEW_DOCUMENT_API_END_POINT, 'DocumentsController:viewDocument');
+        $app->get(VIEW_TRUCK_DETAILS_API_END_POINT, 'TruckController:fetchTeuckDetails');
     }
 );

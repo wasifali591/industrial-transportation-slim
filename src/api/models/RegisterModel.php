@@ -59,7 +59,7 @@ class RegisterModel
             if (is_string($result)) {
                 return $result;
             }
-            $lastID = $result['customDataId'];
+            $lastID = $result['___kp_UserId_xn'];
 
             $fieldsName=array(
                 "__kf_UserId_xn"=>$lastID,
