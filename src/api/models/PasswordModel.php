@@ -65,7 +65,7 @@ class PasswordModel
             }
             // edit the previous password flag to inactive
             $record = $fm->newEditCommand('UserCredentialsLayout', $recordId);
-            $record->setField('Flag_xt', "") ;
+            $record->setField('Flag_xt', "");
             $result=$record->execute();
 
             if ($fm::isError($result)) {

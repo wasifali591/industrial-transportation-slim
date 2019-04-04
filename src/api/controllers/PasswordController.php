@@ -1,10 +1,12 @@
 <?php
 /**
- * File Name  : PasswordController
-* Description : php code to  change password in db
-* Created date : 19/03/2019
-* Author  : Md Wasif Ali
-* Comments :
+ * Change Passsword of a user
+ * Created date : 19/03/2019
+ * 
+ * PHP version 5
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
  */
 namespace App\api\controllers;
 
@@ -18,17 +20,28 @@ require_once __DIR__ . '/../../constants/StatusCode.php';
 require_once __DIR__ .'/../services/DecodeToken.php';
 
 /**
- * class-name:PasswordController
- * description:
+ * Contain two properties($container, $settings), one constructor and
+ * one method(changePassword)
  */
 class PasswordController
 {
-    public $container; //variable to contain the db instance
+    /**
+     * Used to store db information
+     * 
+     * @var object
+     */
+    public $container;
+    /**
+     * Used to store settings information
+     * 
+     * @var object
+     */
     public $settings; //variable to contain the settings
 
     /**
-     * a constructor to initialize the FileMaker instance and get the settings
-     * @param $container
+     * A constructor to initialize the FileMaker instance and get the settings
+     * 
+     * @param object $container sontain db information
      */
     public function __construct(ContainerInterface $container)
     {
@@ -37,16 +50,27 @@ class PasswordController
     }
 
     /**
-     * function-name:ChangePassword
-     * @param $request
-     * @param $request
-     * description: read the input and chek for validation , for valid input check in the db and update
+     * Cahnge Password
+     * 
+     * Read the input and chek for validation , for valid input check in the db
+     * and update. Return message or data according to the situation
+     * 
+     * @param object $request  represents the current HTTP request received
+     *                         by the web server
+     * @param object $response represents the current HTTP response to be
+     *                         returned to the client.
+     *
+     * @return object           return response object with JSON format
      */
     public function changePassword($request, $response)
     {
-        //get userID from token
+        /**
+         * Used to store userId deocded from token
+         *
+         * @var int
+        */
         $id=decodeToken();
-        //read input
+        
         $oldPassword=$request->getParsedBody()['oldPassword'];
         $newPassword=$request->getParsedBody()['newPassword'];
         $confirmNewPassword=$request->getParsedBody()['confirmNewPassword'];
@@ -55,12 +79,18 @@ class PasswordController
         if ($confirmNewPassword == '' || $oldPassword == '' || $newPassword=='') {
             return $response->withJSON(['error' => true, 'message' => 'Enter the required field.'], NOT_ACCEPTABLE);
         }
-        //create instance of Validator
+        /**
+         * Used to store instance of Validator
+         * 
+         * @var object
+         */
         $validator = new Validator();
-        //function(ValidatePassword) call to check password validation
         $validatePassword = $validator->validatePassword($newPassword);
 
-        //if password is not matched with the required pattern the return an error with an error message
+        /**
+         * If password is not matched with the required pattern the return an
+         * error with an error message
+         */
         if (!$validatePassword) {
             return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], UNAUTHORIZED_USER);
         }
@@ -69,15 +99,23 @@ class PasswordController
         if ($newPassword!=$confirmNewPassword) {
             return $response->withJSON(['error' => true, 'message' => 'Password and Conform Password are not match.'], INVALID_CREDINTIAL);
         }
-        //$requestValue is an array hold related data, which is needed to change password
+        /**
+         * Used to store hold related data, which is needed to change password
+         * 
+         * @var array
+         */
         $requestValue = array(
             "id"=>$id,
             "oldPassword" => $oldPassword,
             "password" => $newPassword
         );
-        //creating an instance of PasswordModel
-        $passwordModel = new PasswordModel();
-        $value = $passwordModel->changePassswordModel($requestValue, $this->container);
+        /**
+         * Used to store instance of PasswordModel
+         * 
+         * @var object
+         */
+        $instance = new PasswordModel();
+        $value = $instance->changePassswordModel($requestValue, $this->container);
         //get the settings for responseMessage
         $errorMessage=$this->settings['responsMessage'];
         

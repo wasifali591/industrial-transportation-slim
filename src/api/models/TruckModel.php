@@ -81,7 +81,7 @@ class TruckModel
         $fieldsName=array(
             "__fk_UserId_xn"=>$requestValue['id']
         );
-        $result=$crud->fetchRecord($this->_layoutName, $fieldsName, $fm);
+        $result=$crud->findRecord($this->_layoutName, $fieldsName, $fm);
         return $result;
 
     }

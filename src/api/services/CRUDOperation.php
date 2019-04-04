@@ -82,35 +82,13 @@ class CRUDOperation
         $result = $fmquery->execute();
         
         if ($fm::isError($result)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Fetch record from db
-     *
-     * @param string $layoutName on which want to perform the opeartion
-     * @param array  $fieldsName hold the id of the record with field name
-     * @param object $fm         database instance
-     *
-     * @return multiple types of data return according to the situation
-     */
-    public function fetchRecord($layoutName, $fieldsName, $fm)
-    {
-        $response=array();
-        $fmquery = $fm->newFindCommand($layoutName);
-        $key=array_keys($fieldsName);
-        $fmquery->addFindCriterion($key[0], $fieldsName[$key[0]]);
-        $result = $fmquery->execute();
-        
-        if ($fm::isError($result)) {
             return "NOT_FOUND";
         }
         $recs = $result->getRecords();
         $count=0;
         foreach ($recs as $rec) {                    
             $field=$rec->getFields();
+            $res['recordId']=$rec->getRecordID();
             foreach ($field as $field_name) {
                 $res[$field_name] = $rec->getField($field_name);
             }

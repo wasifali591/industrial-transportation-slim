@@ -1,42 +1,50 @@
 <?php
-
+/**
+ * Manage Document
+ * Created date : 03/04/2019
+ * 
+ * PHP version 5
+ * 
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
+ */
 namespace App\api\models;
 
 require_once __DIR__ .'/../services/MoveFile.php';
 use Slim\Http\UploadedFile;
 
-class DocumentsModel
+/**
+ * Contain two property($_layoutName,$_directory) and two
+ * method(uploadDocument, viewDocument) 
+ */
+class UserDocumentsModel
 {
-    public $directory = 'D:\industrial-transportation-slim\UserDocuments'; //path of the directory where all the documents are sgtored
+    /**
+     * Used to store layou name 
+     * 
+     * @var string
+     */
+    private $_layoutName="UserDocumentLayout";
+    /**
+     * Path of the directory where all the documents are sgtored
+     * 
+     * @var string
+     */
+    private $_directory = 'D:/industrial-transportation-slim/UserDocuments';
+    /**
+     * Upload user documents like profile picture or any government doc
+     *
+     * @param array  $requestValue hold the value to be insert into db
+     * @param object $container    hold the db instance
+     *
+     * @return multiple types of return according to the situation
+     */
     public function uploadDocument($requestValue, $container)
     {
         $fm = $container;
-        //find the userID in db(USerLayout)
-        $fmquery = $fm->newFindCommand("UserLayout");
-        $fmquery->addFindCriterion('___kp_UserId_xn', '==' . $requestValue['id']);
-        $result = $fmquery->execute();
-
-        //if userID not found return false
-        if ($fm::isError($result)) {
-            return 'USER_NOT_MATCHED';
-        }
-        
-        $GovernmentIdType=$requestValue['documentType'];
-        
-        /**
-         * If the GovernmentIdType is not empty thats mean the api is receiving
-         * something, which is the "ProfilePic" is not stored in database as a
-         * document type. If GovernmentIdType isempty then get the idType from
-         * the db 
-         */
-        if ($GovernmentIdType==='') {
-            $records = $result->getRecords();
-            $record = $records[0];
-            $GovernmentIdType = $record->getField('GovernmentIdType_xt');
-        }
         //move the file to proper directory and rename
-        $fileName=moveUploadedFile($this->directory, $requestValue['fileName'], $requestValue['id'], $GovernmentIdType);
-        $fmquery = $fm->newAddCommand("UserDocumentLayout");
+        $fileName=moveUploadedFile($this->_directory, $requestValue['fileName'], $requestValue['id'], $requestValue['documentType']);
+        $fmquery = $fm->newAddCommand($this->_layoutName);
         $fmquery->setField("__kf_UserId_xn", $requestValue['id']);
         $fmquery->setField("Document_xr", $fileName);
         $result = $fmquery->execute();
@@ -47,11 +55,18 @@ class DocumentsModel
         return 'UPDATE_SUCCESSFULLY';
     }
 
+    /**
+     * View documents
+     *
+     * @param array  $requestValue hold the value to be insert into db
+     * @param object $container    hold the db instance
+     *
+     * @return multiple types of return according to the situation
+     */
     public function viewDocument($requestValue, $container)
     {
-        $directory='industrial-transportation-slim/UserDocuments';
         $fm = $container;
-        $fmquery = $fm->newFindCommand("UserDocumentLayout");
+        $fmquery = $fm->newFindCommand($this->_layoutName);
         $fmquery->addFindCriterion('__kf_UserId_xn', '==' . $requestValue['id']);
         $result = $fmquery->execute();
         if ($fm::isError($result)) {
@@ -69,7 +84,7 @@ class DocumentsModel
                 $fileExtension=preg_split("/\?/", $fileName[1]);
                 $name=$fileName[0].'.'.$fileExtension[0];
                 $response=array(
-                        'root'=>$directory,
+                        'root'=>$this->_directory,
                         'fileName'=>$name
                         );
                 return $response;

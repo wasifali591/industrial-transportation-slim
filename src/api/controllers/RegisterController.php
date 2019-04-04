@@ -6,6 +6,8 @@
  * and return response according to the situation
  * Created date : 19/03/2019
  *
+ * PHP version 5
+ * 
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>
  */
@@ -16,7 +18,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
 use App\api\services\Validator;
-use App\api\models\RegisterModel;
+use App\api\models\UserModel;
 
 require_once __DIR__ . '/../../constants/EndPoints.php';
 require_once __DIR__ . '/../../constants/StatusCode.php';
@@ -136,11 +138,11 @@ class RegisterController
             "password" => $hashCode
         );
         /**
-         * Used to store instance of RegisterModel
+         * Used to store instance of UserModel
          *
          * @var object
          */
-        $registration = new RegisterModel();
+        $registration = new UserModel();
         $value = $registration->registration($requestValue, $this->container);
         /**
          * Used to store responseMessage setting
