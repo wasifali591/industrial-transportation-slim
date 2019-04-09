@@ -14,7 +14,8 @@ use \Firebase\JWT\JWT;
 use Interop\Container\ContainerInterface;
 use Slim\Http\UploadedFile;
 
-use App\api\models\UserProfileModel;
+use App\api\models\UserModel;
+use App\api\models\UserAddressLayoutModel;
 
 require_once __DIR__ . '/../../constants/StatusCode.php';
 require_once __DIR__ . '/../services/DecodeToken.php';
@@ -49,7 +50,6 @@ class UserProfileController
     {
         //get the userID from token
         $id = decodeToken();
-
         //read the input
         $gender = $request->getParsedBody()['gender'];
         $dob = $request->getParsedBody()['dob'];
@@ -59,6 +59,7 @@ class UserProfileController
         $locality = $request->getParsedBody()['locality'];
         $landmark = $request->getParsedBody()['landmark'];
         $country = $request->getParsedBody()['country'];
+        $state=$request->getParsedBody()['state'];
         $city = $request->getParsedBody()['city'];
         $postalCode = $request->getParsedBody()['postalCode'];
 
@@ -71,32 +72,50 @@ class UserProfileController
         }
         // makeing an array of valid inputs
         $requestValue = array(
-            "id" => $id,
-            "gender" => $gender,
-            "dob" => $dob,
-            "mobile" => $mobile,
-            "idType" => $idType,
-            "idNumber" => $idNumber,
-            "locality" => $locality,
-            "landmark" => $landmark,
-            "country" => $country,
-            "city" => $city,
-            "postalCode" => $postalCode
+            "___kp_UserId_xn" => $id,
+            "Gender_xt" => $gender,
+            "DateOfBirth_xd" => $dob,
+            "Mobile_xn" => $mobile,
+            "GovernmentIdType_xt" => $idType,
+            "GovernmentIdNumber_xt" => $idNumber,
         );
-        //creating an instance of PasswordModel
-        $userProfileModel = new UserProfileModel();
-        $value = $userProfileModel->updateUserProfileModel($requestValue, $this->container);
-        //get the settings for responseMessage
-        $errorMessage = $this->settings['responsMessage'];
+        /**
+         * Used to store instance of UserModel
+         *
+         * @var object
+         */
+        $instance = new UserModel();
+        $value = $instance->updateProfile($requestValue, $this->container);
+        if (is_string($value)) {
+            $errorMessage = $this->settings['responsMessage'];
+            return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);
+        }
+        $requestValue=array(
+            "__kf_UserId_xn"=>$id,
+            "Country_xt"=>$country,
+            "State_xt"=>$state,
+            "City_xt"=>$city,
+            "Pincode_xn"=>$postalCode,
+            "Locality_xt"=>$locality,
+            "Landmark_xt"=>$landmark
+        );
+        /**
+         * Used to store instance of UserAddressLayoutModel
+         *
+         * @var object
+         */
+        $instance = new UserAddressLayoutModel();
+        $value=$instance->updateProfile($requestValue, $this->container);
 
+        $errorMessage = $this->settings['responsMessage'];
         return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);
     }
 
-    public function viewUserProfile($request, $response)
-    {
-        //get the userID from token
-        $id = decodeToken();
-        $userProfile = new UserProfileModel();
-        $value = $userProfile->viewUserProfile($id, $this->container);
-    }
+    // public function viewUserProfile($request, $response)
+    // {
+    //     //get the userID from token
+    //     $id = decodeToken();
+    //     $userProfile = new UserProfileModel();
+    //     $value = $userProfile->viewUserProfile($id, $this->container);
+    // }
 }

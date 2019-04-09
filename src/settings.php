@@ -53,7 +53,7 @@ return [
                              'message'=>'Truck is already registered.',
                              'statusCode'=>409],
             'NOT_FOUND'=>['error'=>true,
-                             'message'=>'Not found.',
+                             'message'=>'Match Not found.',
                              'statusCode'=>404],
 
             'PASSWORD_CHANGED'=>['error'=>false,

@@ -22,7 +22,7 @@ $app->get(
 $app->group(
     '/public/v1',
     function (\Slim\App $app) {
-        $app->post(USER_LOGIN_API_END_POINT, 'LoginController:checkLogin');
+        $app->post(USER_LOGIN_API_END_POINT, 'LoginController:login');
         $app->post(USER_REGISTER_API_END_POINT, 'RegisterController:register');
     }
 );

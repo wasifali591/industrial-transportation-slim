@@ -13,7 +13,7 @@ namespace App\api\controllers;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
 use Interop\Container\ContainerInterface;
-use App\api\models\PasswordModel;
+use App\api\models\UserCredentialsModel;
 use App\api\services\Validator;
 
 require_once __DIR__ . '/../../constants/StatusCode.php';
@@ -114,8 +114,8 @@ class PasswordController
          * 
          * @var object
          */
-        $instance = new PasswordModel();
-        $value = $instance->changePassswordModel($requestValue, $this->container);
+        $instance = new UserCredentialsModel();
+        $value = $instance->changePassword($requestValue, $this->container);
         //get the settings for responseMessage
         $errorMessage=$this->settings['responsMessage'];
         

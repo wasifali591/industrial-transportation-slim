@@ -1,21 +1,27 @@
 <?php
 /**
- * File Name  : HashCode
-* Description : generate hashcode
-* Created date : 25/03/2019
-* Author  : Md Wasif Ali
-* Comments :
+ * Generate Hash Code 
+ * Created date : 25/03/2019
+ * 
+ * PHP version 5
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
  */
-    /**
-     * function-name:hashCode
-     * @param $password
-     * description: generate hashcode of the password
-     */
-    function hashCode($password)
-    {
-        $options = [
-                'cost' => 10
-            ];
-        $hashCode = password_hash($password, PASSWORD_BCRYPT, $options);
-        return $hashCode;
-    }
+
+/**
+ * Ganerate hashcode of the input taken as an argument using bcrypt alogo and
+ * cost 10 and return the hash
+ * 
+ * @param string $password hold the user password 
+ * 
+ * @return string 
+ */
+function hashCode($password)
+{
+    $options = [
+            'cost' => 10
+        ];
+    $hashCode = password_hash($password, PASSWORD_BCRYPT, $options);
+    return $hashCode;
+}

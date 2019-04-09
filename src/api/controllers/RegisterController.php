@@ -7,7 +7,7 @@
  * Created date : 19/03/2019
  *
  * PHP version 5
- * 
+ *
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>
  */
@@ -19,6 +19,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
 use App\api\services\Validator;
 use App\api\models\UserModel;
+use App\api\models\UserCredentialsModel;
 
 require_once __DIR__ . '/../../constants/EndPoints.php';
 require_once __DIR__ . '/../../constants/StatusCode.php';
@@ -64,11 +65,11 @@ class RegisterController
      * check for proper validation, if validate data are present then perform
      * the rest of registration. Rerturn message according to the situation
      *
-     * @param  object $request  represents the current HTTP request received
-     *                          by the web server
-     * @param  object $response represents the current HTTP response to be
-     *                          returned to the client.
-     * 
+     * @param object $request  represents the current HTTP request received
+     *                         by the web server
+     * @param object $response represents the current HTTP response to be
+     *                         returned to the client.
+     *
      * @return object
      */
     public function register(Request $request, Response $response)
@@ -119,23 +120,17 @@ class RegisterController
         if ($password !== $confirmPassword) {
             return $response->withJSON(['error' => true, 'message' => 'Password and Conform Password are not match.'], INVALID_CREDINTIAL);
         }
-        /**
-         * Used to store the hash code of $password genated by a function(hashCode)
-         *
-         * @var string
-         */
-        $hashCode=hashCode($password);
+        
         /**
          * Used to store value of valid inputs
          *
          * @var array
          */
         $requestValue = array(
-            "userType" => $userType,
-            "firstName" => $firstName,
-            "lastName" => $lastName,
-            "email" => $Email,
-            "password" => $hashCode
+            "UserType_xt" => $userType,
+            "UserFirstName_xt" => $firstName,
+            "UserLastName_xt" => $lastName,
+            "Email_xt" => $Email
         );
         /**
          * Used to store instance of UserModel
@@ -144,16 +139,46 @@ class RegisterController
          */
         $registration = new UserModel();
         $value = $registration->registration($requestValue, $this->container);
+        if (is_string($value)) {
+            /**
+             * Used to store responseMessage setting
+             *
+             * @var array
+             */
+            $errorMessage=$this->settings['responsMessage'];
+            return $response->withJSON(
+                ['error' => $errorMessage[$value]['error'],
+                'message' => $errorMessage[$value]['message']],
+                $errorMessage[$value]['statusCode']
+            );
+        }
+        /**
+         * Used to store the hash code of $password genated by a function(hashCode)
+         *
+         * @var string
+         */
+        $hashCode=hashCode($password);
+        $fieldsName=array(
+            "__kf_UserId_xn"=>$value['___kp_UserId_xn'],
+            "Password_xt"=>$hashCode,
+            "Flag_xt"=>"active",
+        );
+        /**
+         * Used to store instance of UserCredentialsModel
+         *
+         * @var object
+         */
+        $instance=new UserCredentialsModel();
+        $value=$instance->registration($fieldsName, $this->container);
         /**
          * Used to store responseMessage setting
          *
          * @var array
          */
         $errorMessage=$this->settings['responsMessage'];
-        
         return $response->withJSON(
             ['error' => $errorMessage[$value]['error'],
-             'message' => $errorMessage[$value]['message']],
+            'message' => $errorMessage[$value]['message']],
             $errorMessage[$value]['statusCode']
         );
     }

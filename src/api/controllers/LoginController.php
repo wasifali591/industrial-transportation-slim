@@ -24,13 +24,13 @@ use App\api\models\UserCredentialsModel;
 use App\api\models\UserModel;
 use App\api\services\Validator;
 
-require_once __DIR__ . '/../../constants/EndPoints.php';
+require_once __DIR__ . '/../../constants/StatusCode.php';
 
 /**
  * Login controller
  *
  * Contain two property($container,$settings) one constructor
- * and one method(checkLogin)
+ * and one method(login)
  */
 class LoginController
 {
@@ -73,7 +73,7 @@ class LoginController
      *
      * @return object return response object with JSON format
      */
-    public function checkLogin($request, $response)
+    public function login($request, $response)
     {
         $email = $request->getParsedBody()['username'];
         $password = $request->getParsedBody()['password'];
@@ -88,15 +88,12 @@ class LoginController
          * @var Object
          */
         $validator = new Validator();
-
-        //function(ValidateEmail) call to check email validation
         $validateEmail = $validator->validateEmail($email);
 
         //if invalid email then return an error with an error message
         if (!$validateEmail) {
             return $response->withJSON(['error' => true, 'message' => 'Enter valid Email.'], INVALID_CREDINTIAL);
         }
-        //function(ValidateEmail) call to check password validation
         $validatePassword = $validator->validatePassword($password);
 
         /**
@@ -106,7 +103,6 @@ class LoginController
         if (!$validatePassword) {
             return $response->withJSON(['error' => true, 'message' => 'Enter valid Password.'], INVALID_CREDINTIAL);
         }
-
         /**
          * Used to store request value according to the operation
          *
@@ -117,6 +113,7 @@ class LoginController
         );
         $instance=new UserModel();
         $value=$instance->searchRecord($requestValue, $this->container);
+        
         if (is_string($value)) {
             /**
              * Used to store responseMessage array from settings
@@ -127,14 +124,14 @@ class LoginController
             return $response->withJSON(['error' => $responseMessage[$value]['error'], 'message' => $responseMessage[$value]['message']], $responseMessage[$value]['statusCode']);
         }
         $userInformation=$value[0];
+        
         $requestValue=array(
             '__kf_UserId_xn'=>$userInformation['___kp_UserId_xn'],
             'Flag_xt'=>"active"
         );
-        $checkLogIn = new UserCredentialsModel();
-        //function(checkLogin) call
-        $value = $checkLogIn->login($requestValue, $this->container);
-
+        $login = new UserCredentialsModel();
+        //function(login) call
+        $value = $login->login($requestValue, $this->container);
         /**
          * If the return value of the function is string then return response with
          * corosponding message of the value
@@ -149,7 +146,7 @@ class LoginController
             );
         }
         $userCredential=$value[0];
-
+       
         /**
          * If the input password is matched(email is checked before and the
          * corrosponding passwoird is matched) with db then return a response(token)
@@ -161,9 +158,10 @@ class LoginController
                 "HS256"
             );
             return $response->withJSON(
-                ['token' => $token, 'uaerInformation' => $userInformation],
+                ['token' => $token, 'userInformation' => $userInformation],
                 SUCCESS_RESPONSE
             );
         }
+        return $response->withJSON(['error'=>false,'message'=>"Password is incorrect."], 200);
     }
 }
