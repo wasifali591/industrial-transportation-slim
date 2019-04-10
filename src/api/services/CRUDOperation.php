@@ -42,7 +42,7 @@ class CRUDOperation
         $result = $fmquery->execute();
 
         if ($fm::isError($result)) {
-            return "SERVER_ERROR";
+            return "INTERNAL_SERVER_ERROR";
         }
         $recs = $result->getRecords();
         $record = $recs[0];

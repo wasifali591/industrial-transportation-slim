@@ -20,6 +20,7 @@ use Interop\Container\ContainerInterface;
 use App\api\services\Validator;
 use App\api\models\UserModel;
 use App\api\models\UserCredentialsModel;
+use App\api\models\UserAddressModel;
 
 require_once __DIR__ . '/../../constants/EndPoints.php';
 require_once __DIR__ . '/../../constants/StatusCode.php';
@@ -152,6 +153,30 @@ class RegisterController
                 $errorMessage[$value]['statusCode']
             );
         }
+        $userId=$value['___kp_UserId_xn'];
+        $fieldsName=array(
+            "__kf_UserId_xn"=>$value['___kp_UserId_xn']
+        );
+        /**
+         * Used to store instance of UserCredentialsModel
+         *
+         * @var object
+         */
+        $instance=new UserAddressModel();
+        $value=$instance->createPlaceForAddress($fieldsName, $this->container);
+        if (is_string($value)) {
+            /**
+             * Used to store responseMessage setting
+             *
+             * @var array
+             */
+            $errorMessage=$this->settings['responsMessage'];
+            return $response->withJSON(
+                ['error' => $errorMessage[$value]['error'],
+                'message' => $errorMessage[$value]['message']],
+                $errorMessage[$value]['statusCode']
+            );
+        }
         /**
          * Used to store the hash code of $password genated by a function(hashCode)
          *
@@ -159,7 +184,7 @@ class RegisterController
          */
         $hashCode=hashCode($password);
         $fieldsName=array(
-            "__kf_UserId_xn"=>$value['___kp_UserId_xn'],
+            "__kf_UserId_xn"=>$userId,
             "Password_xt"=>$hashCode,
             "Flag_xt"=>"active",
         );

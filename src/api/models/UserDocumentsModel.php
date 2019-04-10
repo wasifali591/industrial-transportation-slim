@@ -41,9 +41,10 @@ class UserDocumentsModel
      */
     public function uploadDocument($requestValue, $container)
     {
+        $directory = 'D:/industrial-transportation-slim/UserDocuments';
         $fm = $container;
         //move the file to proper directory and rename
-        $fileName=moveUploadedFile($this->_directory, $requestValue['fileName'], $requestValue['id'], $requestValue['documentType']);
+        $fileName=moveUploadedFile($directory, $requestValue['fileName'], $requestValue['id'], $requestValue['documentType']);
         $fmquery = $fm->newAddCommand($this->_layoutName);
         $fmquery->setField("__kf_UserId_xn", $requestValue['id']);
         $fmquery->setField("Document_xr", $fileName);
@@ -65,12 +66,17 @@ class UserDocumentsModel
      */
     public function viewDocument($requestValue, $container)
     {
+        $directory = 'industrial-transportation-slim/UserDocuments';
         $fm = $container;
         $fmquery = $fm->newFindCommand($this->_layoutName);
         $fmquery->addFindCriterion('__kf_UserId_xn', '==' . $requestValue['id']);
         $result = $fmquery->execute();
         if ($fm::isError($result)) {
-            return "USER_NOT_MATCHED";
+            $response=array(
+                'root'=>$directory,
+                'fileName'=>"ProfilePic.jpg"
+                );
+            return $response;
         }
         $records = $result->getRecords();
 
@@ -84,12 +90,16 @@ class UserDocumentsModel
                 $fileExtension=preg_split("/\?/", $fileName[1]);
                 $name=$fileName[0].'.'.$fileExtension[0];
                 $response=array(
-                        'root'=>$this->_directory,
+                        'root'=>$directory,
                         'fileName'=>$name
                         );
                 return $response;
             }
         }
-        return "DOCUMENT_NOT_FOUND";
+        $response=array(
+            'root'=>$directory,
+            'fileName'=>"ProfilePic.jpg"
+            );
+        return $response;
     }
 }

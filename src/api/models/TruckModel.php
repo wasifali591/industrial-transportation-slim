@@ -43,7 +43,7 @@ class TruckModel
         );
         $result=$crud->findRecord($this->_layoutName, $fieldsName, $fm);
         //if same truck is not present in the db then insert the input into db
-        if (!$result) {
+        if (is_string($result)) {
             $fieldsName=array(
             "__fk_UserId_xn"=>$requestValue['id'],
             "TruckType_xt"=>$requestValue['truckType'],
@@ -51,7 +51,9 @@ class TruckModel
             "LicenceNumber_xt"=>$requestValue['licenceNumber']
             );
             $result=$crud->createRecord("TruckLayout", $fieldsName, $fm);
-            return $result;
+            if (is_string($result)) {
+                return $result;
+            }
         }
         return "TRUCK_ALREADY_REGISTERED";
     }

@@ -99,6 +99,26 @@ class UserModel
         $result=$results[0];
         $recordId=$result['recordId'];
         $results=$instance->editRecord($this->_layoutName, $recordId, $requestValue, $container);
+        
+        return $results;
+    }
+    /**
+     * View user profile
+     *
+     * @param array  $requestValue hold the value to be insert into db
+     * @param object $container    hold the db instance
+     *
+     * @return multiple types of return according to the situation
+     */
+    public function viewProfile($requestValue, $container)
+    {
+        /**
+         * Used to store instance of CRUDOperation
+         *
+         * @var object
+         */
+        $instance=new CRUDOperation();
+        $results=$instance->findRecord($this->_layoutName, $requestValue, $container);
         return $results;
     }
 }

@@ -38,5 +38,6 @@ $app->group(
 
         $app->get(VIEW_DOCUMENT_API_END_POINT, 'DocumentsController:viewDocument');
         $app->get(VIEW_TRUCK_DETAILS_API_END_POINT, 'TruckController:fetchTeuckDetails');
+        $app->get(VIEW_USER_INFORMATION_API_END_POINT, 'UserProfileController:viewUserProfile');
     }
 );

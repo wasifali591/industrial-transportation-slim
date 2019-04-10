@@ -70,23 +70,25 @@ class TruckController
         //get userID from token
         $id=decodeToken();
         //read input
-        $truckType = $request->getParsedBody()['truckType'];
-        $manufacturedDate = $request->getParsedBody()['truckManufacturedDate'];
-        $licenceNumber = $request->getParsedBody()['licensePlateNumber'];
+        $body=$request->getParsedBody();
+
+        $truckType = $body['truckType'];
+        $manufacturedDate = $body['truckManufacturedDate'];
+        $licenceNumber = $body['licensePlateNumber'];
         /**
          * Used to store getUploadedFiles function reference
          *
          * @var object
          */
-        $files = $request->getUploadedFiles();
+        //$files = $request->getUploadedFiles();
         /**
          * Used to store property of the uploaded document
          *
          * @var array
          */
-        $registrationCertificate = $files['registrationCertificate'];
-        $insurancePaper = $files['insuranceDocument'];
-        $polutionCertificate = $files['pollutionDocument'];
+        // $registrationCertificate = $files['registrationCertificate'];
+        // $insurancePaper = $files['insuranceDocument'];
+        // $polutionCertificate = $files['pollutionDocument'];
         //if required inputs are emty then return an error with an error message
         if (empty($truckType) || empty($manufacturedDate) || empty($licenceNumber)) {
             return $response->withJSON(

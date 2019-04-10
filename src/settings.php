@@ -63,7 +63,7 @@ return [
                              'message'=>'Successfully registered.',
                              'statusCode'=>201],
             'UPDATE_SUCCESSFULLY'=>['error'=>false,
-                             'message'=>'Successfully uptadeted.',
+                             'message'=>'Successfully updated.',
                              'statusCode'=>201],
             
         ],
