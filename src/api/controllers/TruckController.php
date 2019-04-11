@@ -16,7 +16,7 @@ use Interop\Container\ContainerInterface;
 use App\api\models\TruckModel;
 use App\api\models\TruckDocumentModel;
 
-require_once __DIR__ . '/../../constants/EndPoints.php';
+require_once __DIR__ . '/../../constants/StatusCode.php';
 require_once __DIR__ .'/../services/DecodeToken.php';
 
 /**
@@ -93,7 +93,7 @@ class TruckController
         if (empty($truckType) || empty($manufacturedDate) || empty($licenceNumber)) {
             return $response->withJSON(
                 ['error' => true, 'message' => 'Enter the required field.'],
-                NO_CONTENT
+                400
             );
         }
         /**
@@ -114,7 +114,7 @@ class TruckController
          */
         $truckController=new TruckModel();
         $value=$truckController->uploadTruckDetails($requestValue, $this->container);
-    
+
         if (is_string($value)) {
             /**
              * Used to store responseMessage setting
@@ -128,11 +128,6 @@ class TruckController
                 $errorMessage[$value]['statusCode']
             );
         }
-        return $response->withJSON(
-            ['error' => false,
-            'message' => "Truck added"],
-            201
-        );
         // $truckId=$value['___kp_TruckId_xn'];
         // $requestValue = array(
         //     "registrationCertificate" => $registrationCertificate,

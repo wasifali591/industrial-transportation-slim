@@ -21,17 +21,11 @@ class TruckModel
      *
      * @param array  $requestValue hold the value to be insert into db
      * @param object $container    hold the db instance
-     * 
+     *
      * @return multiple types of return according to the situation
      */
     public function uploadTruckDetails($requestValue, $container)
     {
-        /**
-         * Used to store db information
-         *
-         * @var object
-         */
-        $fm = $container;
         /**
          * Used to store instance of CRUDOperation
          *
@@ -41,7 +35,7 @@ class TruckModel
         $fieldsName=array(
             "LicenceNumber_xt"=>$requestValue['licenceNumber']
         );
-        $result=$crud->findRecord($this->_layoutName, $fieldsName, $fm);
+        $result=$crud->findRecord($this->_layoutName, $fieldsName, $container);
         //if same truck is not present in the db then insert the input into db
         if (is_string($result)) {
             $fieldsName=array(
@@ -50,12 +44,14 @@ class TruckModel
             "ManufacturedDate_xd"=>$requestValue['manufacturedDate'],
             "LicenceNumber_xt"=>$requestValue['licenceNumber']
             );
-            $result=$crud->createRecord("TruckLayout", $fieldsName, $fm);
+            $result=$crud->createRecord($this->_layoutName, $fieldsName, $container);
             if (is_string($result)) {
                 return $result;
             }
+        } else {
+            return "TRUCK_ALREADY_REGISTERED";
         }
-        return "TRUCK_ALREADY_REGISTERED";
+        return "SUCCESSFULLY_REGISTER";
     }
 
     /**
@@ -63,17 +59,11 @@ class TruckModel
      *
      * @param array  $requestValue hold the value to be insert into db
      * @param object $container    hold the db instance
-     * 
+     *
      * @return multiple types of return according to the situation
      */
     public function fetchTruckDetails($requestValue, $container)
     {
-        /**
-         * Used to store db information
-         *
-         * @var object
-         */
-        $fm = $container;
         /**
          * Used to store instance of CRUDOperation
          *
@@ -83,8 +73,7 @@ class TruckModel
         $fieldsName=array(
             "__fk_UserId_xn"=>$requestValue['id']
         );
-        $result=$crud->findRecord($this->_layoutName, $fieldsName, $fm);
+        $result=$crud->findRecord($this->_layoutName, $fieldsName, $container);
         return $result;
-
     }
 }
