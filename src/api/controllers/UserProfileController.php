@@ -77,20 +77,17 @@ class UserProfileController
         //read the input
         $body=$request->getParsedBody();
 
-        $gender = isset($body['gender'])? $body['gender'] : "";
-        $mobile=isset($body['mobileNumber'])?$body['mobileNumber'] : "";
-        $idType=isset($body['idType'])?$body['idType'] : "";
-        $idNumber=isset($body['idNumber'])?$body['idNumber'] : "";
-        $locality=isset($body['locality'])?$body['locality'] : "";
-        $landmark=isset($body['landmark'])?$body['landmark'] : "";
-        $country=isset($body['country'])?$body['country'] : "";
-        $city=isset($body['city'])?$body['city'] : "";
-        $state=isset($body['state'])?$body['state'] : "";
-        $dob=isset($body['dob'])?$body['dob'] : "";
-        $postalCode=isset($body['postalCode'])?$body['postalCode'] : "";
-
-        // return $response->withJSON($body, 400);
-
+        $gender = $body['gender'];
+        $mobile=$body['mobileNumber'];
+        $idType=$body['idType'];
+        $idNumber=$body['idNumber'];
+        $locality=$body['locality'];
+        $landmark=$body['landmark'];
+        $country=$body['country'];
+        $city=$body['city'];
+        $state=$body['state'];
+        $dob=$body['dob'];
+        $postalCode=$body['postalCode'];
         //check required fields are empty or not
         if (empty($gender) || empty($dob) || empty($mobile) || empty($idType)
             || empty($idNumber) || empty($locality) || empty($landmark)
@@ -109,7 +106,7 @@ class UserProfileController
             "DateOfBirth_xd" => $dob,
             "Mobile_xn" => $mobile,
             "GovernmentIdType_xt" => $idType,
-            "GovernmentIdNumber_xt" => $idNumber,
+            "GovernmentIdNumber_xt" => $idNumber
         );
         /**
          * Used to store instance of UserModel
@@ -179,7 +176,10 @@ class UserProfileController
          */
         $instance = new UserModel();
         $value = $instance->viewProfile($requestValue, $this->container);
-
+        /**
+         * If the return value of the function is string then return response with
+         * corosponding message of the value
+         */
         if (is_string($value)) {
             $errorMessage = $this->settings['responsMessage'];
             return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);
@@ -193,7 +193,10 @@ class UserProfileController
          */
         $instance = new UserAddressModel();
         $value = $instance->viewProfile($requestValue, $this->container);
-        
+        /**
+         * If the return value of the function is string then return response with
+         * corosponding message of the value
+         */
         if (is_string($value)) {
             $errorMessage = $this->settings['responsMessage'];
             return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);

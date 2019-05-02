@@ -3,6 +3,8 @@
  * Insert and retrieve data related to Truck
  * Created date : 01/04/2019
  *
+ * PHP version 5
+ * 
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>
  */
@@ -31,20 +33,24 @@ class TruckModel
          *
          * @var object
          */
-        $crud=new CRUDOperation();
+        $instance=new CRUDOperation();
         $fieldsName=array(
             "LicenceNumber_xt"=>$requestValue['licenceNumber']
         );
-        $result=$crud->findRecord($this->_layoutName, $fieldsName, $container);
+        $result=$instance->findRecord($this->_layoutName, $fieldsName, $container);
         //if same truck is not present in the db then insert the input into db
         if (is_string($result)) {
             $fieldsName=array(
-            "__fk_UserId_xn"=>$requestValue['id'],
+            "__fk_UserId_Owner_xn"=>$requestValue['id'],
             "TruckType_xt"=>$requestValue['truckType'],
             "ManufacturedDate_xd"=>$requestValue['manufacturedDate'],
             "LicenceNumber_xt"=>$requestValue['licenceNumber']
             );
-            $result=$crud->createRecord($this->_layoutName, $fieldsName, $container);
+            $result=$instance->createRecord($this->_layoutName, $fieldsName, $container);
+            /**
+             * If the return value of the function is string then return response
+             * with corosponding message of the value
+             */
             if (is_string($result)) {
                 return $result;
             }
@@ -71,7 +77,7 @@ class TruckModel
          */
         $crud=new CRUDOperation();
         $fieldsName=array(
-            "__fk_UserId_xn"=>$requestValue['id']
+            "__fk_UserId_Owner_xn"=>$requestValue['id']
         );
         $result=$crud->findRecord($this->_layoutName, $fieldsName, $container);
         return $result;

@@ -70,13 +70,15 @@ class PasswordController
          * @var int
         */
         $id=decodeToken();
+        //read input
+        $body=$request->getParsedBody();
         
-        $oldPassword=$request->getParsedBody()['oldPassword'];
-        $newPassword=$request->getParsedBody()['newPassword'];
-        $confirmNewPassword=$request->getParsedBody()['confirmNewPassword'];
+        $oldPassword=$body['oldPassword'];
+        $newPassword=$body['newPassword'];
+        $confirmNewPassword=$body['confirmNewPassword'];
 
         // Checking if any of the fields are empty
-        if ($confirmNewPassword == '' || $oldPassword == '' || $newPassword=='') {
+        if (empty($confirmNewPassword) || empty($oldPassword) || empty($newPassword)) {
             return $response->withJSON(['error' => true, 'message' => 'Enter the required field.'], NOT_ACCEPTABLE);
         }
         /**

@@ -14,7 +14,7 @@ require_once __DIR__ .'/../services/MoveFile.php';
 use Slim\Http\UploadedFile;
 
 /**
- * Contain two property($_layoutName,$_directory) and two
+ * Contain one property($_layoutName) and two
  * method(uploadDocument, viewDocument) 
  */
 class UserDocumentsModel
@@ -26,12 +26,6 @@ class UserDocumentsModel
      */
     private $_layoutName="UserDocumentLayout";
     /**
-     * Path of the directory where all the documents are sgtored
-     * 
-     * @var string
-     */
-    private $_directory = 'D:/industrial-transportation-slim/UserDocuments';
-    /**
      * Upload user documents like profile picture or any government doc
      *
      * @param array  $requestValue hold the value to be insert into db
@@ -41,6 +35,11 @@ class UserDocumentsModel
      */
     public function uploadDocument($requestValue, $container)
     {
+        /**
+         * File path where the file will be stored
+         * 
+         * @var string
+         */
         $directory = 'D:/industrial-transportation-slim/UserDocuments';
         $fm = $container;
         //move the file to proper directory and rename
@@ -66,11 +65,17 @@ class UserDocumentsModel
      */
     public function viewDocument($requestValue, $container)
     {
+        /**
+         * Used to store the file path from where documents are stored
+         * 
+         * @var string
+         */
         $directory = 'industrial-transportation-slim/UserDocuments';
         $fm = $container;
         $fmquery = $fm->newFindCommand($this->_layoutName);
         $fmquery->addFindCriterion('__kf_UserId_xn', '==' . $requestValue['id']);
         $result = $fmquery->execute();
+        //if no file found then show a demo file
         if ($fm::isError($result)) {
             $response=array(
                 'root'=>$directory,
@@ -96,6 +101,7 @@ class UserDocumentsModel
                 return $response;
             }
         }
+        //if no file found then show a demo file
         $response=array(
             'root'=>$directory,
             'fileName'=>"ProfilePic.jpg"

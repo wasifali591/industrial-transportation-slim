@@ -100,7 +100,7 @@ class DocumentsController
         /**
          * If the GovernmentIdType is not empty thats mean the api is receiving
          * something, which is the "ProfilePic" is not stored in database as a
-         * document type. If GovernmentIdType isempty then get the idType from
+         * document type. If GovernmentIdType is empty then get the idType from
          * the db
          */
         if (empty($documentType)) {
@@ -114,6 +114,10 @@ class DocumentsController
             */
             $instance=new UserModel();
             $value=$instance->searchRecord($requestValue, $this->container);
+            /**
+             * If the value of the variable $value is string, thats means the
+             * variable hold some kind of error message or information message
+             */
             if (is_string($value)) {
                 /**
                  * Used to store responseMessage array from settings
@@ -211,6 +215,10 @@ class DocumentsController
         $instance=new UserDocumentsModel();
         $value=$instance->viewDocument($requestValue, $this->container);
         $errorMessage=$this->settings['responsMessage'];
+        /**
+         * If the value of the variable $value is string, thats means the
+         * variable hold some kind of error message or information message
+         */
         if (is_string($value)) {
             return $response->withJSON(['error' => $errorMessage[$value]['error'], 'message' => $errorMessage[$value]['message']], $errorMessage[$value]['statusCode']);
         } else {

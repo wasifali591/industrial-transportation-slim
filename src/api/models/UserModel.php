@@ -17,7 +17,8 @@ namespace App\api\models;
 use App\api\services\CRUDOperation;
 
 /**
- * Contain  one method(Registration)
+ * Contain  one property($_layoutName) and four method(Registration,
+ * searchRecord, updateProfile, viewProfile)
  */
 class UserModel
 {
@@ -49,6 +50,7 @@ class UserModel
             $results=$instance->createRecord($this->_layoutName, $requestValue, $container);
             return $results;
         }
+
         return "ALREADY_REGISTERED";
     }
 
@@ -70,6 +72,7 @@ class UserModel
          */
         $crud=new CRUDOperation();
         $result=$crud->findRecord($this->_layoutName, $requestValue, $container);
+
         return $result;
     }
 
@@ -83,21 +86,22 @@ class UserModel
      */
     public function updateProfile($requestValue, $container)
     {
-        $fieldsName=array(
-            "___kp_UserId_xn"=> $requestValue['___kp_UserId_xn']
-        );
         /**
          * Used to store instance of CRUDOperation
          *
          * @var object
          */
         $instance=new CRUDOperation();
+        $fieldsName=array(
+            "___kp_UserId_xn"=> $requestValue['___kp_UserId_xn']
+        );
         $results=$instance->findRecord($this->_layoutName, $fieldsName, $container);
         if (is_string($results)) {
             return $results;
         }
         $result=$results[0];
         $recordId=$result['recordId'];
+        
         $results=$instance->editRecord($this->_layoutName, $recordId, $requestValue, $container);
         
         return $results;
@@ -119,6 +123,7 @@ class UserModel
          */
         $instance=new CRUDOperation();
         $results=$instance->findRecord($this->_layoutName, $requestValue, $container);
+
         return $results;
     }
 }

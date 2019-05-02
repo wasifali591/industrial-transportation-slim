@@ -75,25 +75,11 @@ class TruckController
         $truckType = $body['truckType'];
         $manufacturedDate = $body['truckManufacturedDate'];
         $licenceNumber = $body['licensePlateNumber'];
-        /**
-         * Used to store getUploadedFiles function reference
-         *
-         * @var object
-         */
-        //$files = $request->getUploadedFiles();
-        /**
-         * Used to store property of the uploaded document
-         *
-         * @var array
-         */
-        // $registrationCertificate = $files['registrationCertificate'];
-        // $insurancePaper = $files['insuranceDocument'];
-        // $polutionCertificate = $files['pollutionDocument'];
         //if required inputs are emty then return an error with an error message
         if (empty($truckType) || empty($manufacturedDate) || empty($licenceNumber)) {
             return $response->withJSON(
                 ['error' => true, 'message' => 'Enter the required field.'],
-                400
+                NOT_ACCEPTABLE
             );
         }
         /**
@@ -114,7 +100,10 @@ class TruckController
          */
         $truckController=new TruckModel();
         $value=$truckController->uploadTruckDetails($requestValue, $this->container);
-
+        /**
+         * If the return value of the function is string then return response with
+         * corosponding message of the value
+         */
         if (is_string($value)) {
             /**
              * Used to store responseMessage setting
@@ -128,19 +117,6 @@ class TruckController
                 $errorMessage[$value]['statusCode']
             );
         }
-        // $truckId=$value['___kp_TruckId_xn'];
-        // $requestValue = array(
-        //     "registrationCertificate" => $registrationCertificate,
-        //     "insurancePaper" => $insurancePaper,
-        //     "polutionCertificate" => $polutionCertificate
-        // );
-        // /**
-        //  * Used to store instance of TruckDocumnetsModel
-        //  *
-        //  * @var Object
-        //  */
-        // $truckController=new TruckDocumentModel();
-        // $value=$truckController->uploadTruckDocument($truckId, $requestValue, $this->container);
     }
 
     /**
@@ -181,6 +157,6 @@ class TruckController
                 $errorMessage[$value]['statusCode']
             );
         }
-        return $response->withJSON($value, 200);
+        return $response->withJSON($value, SUCCESS_RESPONSE);
     }
 }

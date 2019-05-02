@@ -1,8 +1,10 @@
 <?php
 /**
- * Insert and retrieve data related to Truck
+ * Insert and retrieve documents related to Truck
  * Created date : 02/04/2019
- *
+ * 
+ * PHP version 5
+ * 
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>
  */
@@ -11,7 +13,7 @@ namespace App\api\models;
 use App\api\services\CRUDOperation;
 
 /**
- * Contain
+ * Contain one property($_layoutName) and one method(uploadTruckDocument)
  */
 class TruckDocumentModel
 {
@@ -19,15 +21,21 @@ class TruckDocumentModel
     /**
      * Insert the truck document into the db
      *
-     * @param  array  $requestValue hold the value to be insert into db
-     * @param  object $container    hold the db instance
-     * @return
+     * @param int    $id           hold the truck id
+     * @param array  $requestValue hold the value to be insert into db
+     * @param object $container    hold the db instance
+     * 
+     * @return multiple types of value according to the situation
      */
     public function uploadTruckDocument($id, $requestValue, $container)
     {
+        /**
+         * Used to store the file path where the documents will be stored
+         * 
+         * @var string
+         */
         $directory='industrial-transportation-slim/UserDocuments';
         /**
-         * Used to store db information
          *
          * @var object
          */

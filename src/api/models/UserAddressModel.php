@@ -13,7 +13,8 @@ namespace App\api\models;
 use App\api\services\CRUDOperation;
 
 /**
- * Conatin one property($_layoutName) and one method(updateProfile)
+ * Conatin one property($_layoutName) and three method(updateProfile,
+ * viewProfile, createPlaceForAddress)
  */
 class UserAddressModel
 {

@@ -16,7 +16,8 @@ use App\api\services\CRUDOperation;
 require_once __DIR__ .'/../services/HashCode.php';
 
 /**
- * Contain one method(login)
+ * Contain one property($_layoutName) and three method(login,
+ * registration, changePassword)
  */
 class UserCredentialsModel
 {
@@ -61,7 +62,10 @@ class UserCredentialsModel
          */
         $instance=new CRUDOperation();
         $results=$instance->createRecord($this->_layoutName, $requestValue, $container);
-        // $results=$instance->findRecord($this->_layoutName, $requestValue, $container);
+        /**
+         * If the return value of the function is string then return response with
+         * corosponding message of the value
+         */
         if (is_string($results)) {
             return $results;
         }
@@ -89,6 +93,10 @@ class UserCredentialsModel
          */
         $instance=new CRUDOperation();
         $results=$instance->findRecord($this->_layoutName, $fieldsName, $container);
+        /**
+         * If the value of the variable $value is string, thats means the
+         * variable hold some kind of error message or information message
+         */
         if (is_string($results)) {
             return $results;
         }
@@ -105,7 +113,10 @@ class UserCredentialsModel
                 '__kf_UserId_xn'=>$requestValue['id']
             );
             $results=$instance->findRecord($this->_layoutName, $fieldsName, $container);
-
+            /**
+             * If the return value of the function is string then return response
+             * with corosponding message of the value
+            */
             if (is_string($results)) {
                 return $results;
             }
@@ -142,6 +153,10 @@ class UserCredentialsModel
                 "Flag_xt"=>"active"
             );
             $result=$instance->createRecord($this->_layoutName, $fieldsName, $container);
+            /**
+             * If the value of the variable $value is string, thats means the
+             * variable hold some kind of error message or information message
+             */
             if (is_string($results)) {
                 return $results;
             }

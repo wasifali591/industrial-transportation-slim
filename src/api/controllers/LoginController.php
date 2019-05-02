@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Manage login
+ * Login
  *
  * Receive input(username and password)  and return a token if the credentials
  * are match or return appropriate message
@@ -75,8 +75,11 @@ class LoginController
      */
     public function login($request, $response)
     {
-        $email = $request->getParsedBody()['username'];
-        $password = $request->getParsedBody()['password'];
+        //read input
+        $body=$request->getParsedBody();
+        
+        $email = $body['username'];
+        $password = $body['password'];
 
         //if email and password is emty then return an error with an error message
         if (empty($email) || empty($password)) {
@@ -113,7 +116,10 @@ class LoginController
         );
         $instance=new UserModel();
         $value=$instance->searchRecord($requestValue, $this->container);
-        
+        /**
+         * If the return value of the function is string then return response with
+         * corosponding message of the value
+         */
         if (is_string($value)) {
             /**
              * Used to store responseMessage array from settings
@@ -162,6 +168,6 @@ class LoginController
                 SUCCESS_RESPONSE
             );
         }
-        return $response->withJSON(['error'=>false,'message'=>"Password is incorrect."], 200);
+        return $response->withJSON(['error'=>false,'message'=>"Password is incorrect."], INVALID_USER_PASS);
     }
 }

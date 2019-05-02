@@ -75,13 +75,15 @@ class RegisterController
      */
     public function register(Request $request, Response $response)
     {
-        // Receiving values from client side and assigning it to a variable
-        $firstName = $request->getParsedBody()['firstName'];
-        $lastName = $request->getParsedBody()['lastName'];
-        $Email = $request->getParsedBody()['email'];
-        $userType = $request->getParsedBody()['userType'];
-        $password = $request->getParsedBody()['password'];
-        $confirmPassword = $request->getParsedBody()['confirmPassword'];
+        // read input
+        $body=$request->getParsedBody();
+
+        $firstName = $body['firstName'];
+        $lastName = $body['lastName'];
+        $Email = $body['email'];
+        $userType = $body['userType'];
+        $password = $body['password'];
+        $confirmPassword = $body['confirmPassword'];
 
         // Checking if any of the fields are empty
         if (empty($firstName) || empty($lastName) || empty($Email)
@@ -140,6 +142,10 @@ class RegisterController
          */
         $registration = new UserModel();
         $value = $registration->registration($requestValue, $this->container);
+        /**
+         * If the return value of the function is string then return response with
+         * corosponding message of the value
+         */
         if (is_string($value)) {
             /**
              * Used to store responseMessage setting
@@ -164,6 +170,10 @@ class RegisterController
          */
         $instance=new UserAddressModel();
         $value=$instance->createPlaceForAddress($fieldsName, $this->container);
+        /**
+         * If the return value of the function is string then return response with
+         * corosponding message of the value
+         */
         if (is_string($value)) {
             /**
              * Used to store responseMessage setting
