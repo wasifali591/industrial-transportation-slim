@@ -1,11 +1,12 @@
 <?php
-
 /**
- * File Name  : StatusCode
-* Description : define macro for status codes
-* Created date : 19/03/2019
-* Author  : Md Wasif Ali
-* Comments :
+ * Define macro for status code
+ * Created date : 19/03/2019
+ *
+ * PHP version 5
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
  */
 
 /*Error Code */

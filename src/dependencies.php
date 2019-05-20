@@ -1,4 +1,16 @@
 <?php
+/**
+ * Depedencies
+ * 
+ * Database  connection and the classes of controller are return
+ * from here which can easyli access  from routes
+ * Created date : 19/03/2019
+ *
+ * PHP version 5
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
+ */
     // DIC configuration
 
     $container = $app->getContainer();
@@ -32,6 +44,7 @@
         return $fm;
     };
 
+    //return the class defined path 
     $container['LoginController'] = function ($c) {
         return new App\api\controllers\LoginController($c);
     };

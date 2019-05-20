@@ -1,10 +1,12 @@
 <?php
 /**
- * File Name  : EndPoints
-* Description : define macro for api endpoints
-* Created date : 19/03/2019
-* Author  : Md Wasif Ali
-* Comments :
+ * Define macro for api end points
+ * Created date : 19/03/2019
+ *
+ * PHP version 5
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
  */
     define('USER_LOGIN_API_END_POINT', '/login');
     define('USER_REGISTER_API_END_POINT', '/register');

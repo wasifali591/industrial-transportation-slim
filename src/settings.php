@@ -1,5 +1,14 @@
 <?php
-return [
+/**
+ * Settings
+ * Created date : 19/03/2019
+ *
+ * PHP version 5
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
+ */
+return[
     'settings' => [
         'displayErrorDetails' => true, // set to false in production
         'addContentLengthHeader' => false, // Allow the web server to send the content-length header
@@ -29,7 +38,7 @@ return [
             'secret' => 'truckage'
         ],
 
-        //responsMessage for each type of response and their corrosponding message and status code
+        //responsMessage for each type of errors and information and their corrosponding message and status code
         'responsMessage'=>[
             'SERVER_ERROR'=>['error'=>true,
                              'message'=>'Internal server error.',
