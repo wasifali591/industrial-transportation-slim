@@ -1,23 +1,27 @@
 <?php
 /**
- * File Name  : HashCode
-* Description : generate hashcode
-* Created date : 25/03/2019
-* Author  : Md Wasif Ali
-* Comments :
+ * Generate HashCode of a given password
+ * Created date : 25/03/2019
+ * 
+ * PHP version 5
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
  */
 
 use Slim\Http\UploadedFile;
 
 /**
- * function-name:moveUploadedFile
- * @param string $directory path of the directory where the file will store
- * @param UploadedFile $uploadedFile the file
- * @param number $id user id of the user
- * @param string $idType which type of documents are want to upload
- * description: move the uploaded file to destination folder, and rename the file
-*/
-
+ * Move uploaded file to a selective directory and rename
+ * the file to acoordintg to the file type
+ * 
+ * @param string $directory    path of the directory where the file will store
+ * @param object $uploadedFile the file we want to store 
+ * @param int    $id           user id of the user
+ * @param string $idType       which type of documents are want to upload
+ *
+ * @return string $name        name of the file 
+ */
 function moveUploadedFile($directory, UploadedFile  $uploadedFile, $id, $idType)
 {
     $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);

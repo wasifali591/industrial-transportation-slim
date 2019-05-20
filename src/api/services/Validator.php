@@ -1,37 +1,45 @@
 <?php
 /**
- * File Name  : Validator
-* Description : check validation of required field
-* Created date : 19/03/2019
-* Author  : Md Wasif Ali
-* Comments :
+ * Check data is valid or not 
+ * Created date : 19/03/2019
+ * 
+ * PHP version 5
+ *
+ * @author  Original Author <wasifali591@gmail.com>
+ * @version <GIT: wasifali591/industrial-transportation-slim>
  */
 
- namespace App\api\services;
+namespace App\api\services;
 
 require_once __DIR__ . '/../../constants/StatusCode.php';
 
 /**
- * class-name:Validator
- * description: validate the data according to need
+ * Contain two method(validateEmail, validatePassword)
  */
 class Validator
 {
     /**
-     * function-name:validateEmail
-     * description:
+     * Check the input data is a valid email or not 
+     * 
+     * @param string $email mail assign by the user
+     * 
+     * @return bool 
      */
-    public function validateEmail(string $Email)
+    public function validateEmail(string $email)
     {
-        if (filter_var($Email, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return true;
         }
         return false;
     }
 
     /**
-     * function-name:validatePassword
-     * description:
+     * Check the input data is a valid password  or not ,
+     * match with a pattarn declared using regular expression
+     * 
+     * @param string $password password assign by the user
+     * 
+     * @return bool 
      */
     public function validatePassword(string $password)
     {
