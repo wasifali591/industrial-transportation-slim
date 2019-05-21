@@ -85,7 +85,7 @@ class UserProfileController
         $landmark=$body['landmark'];
         $country=$body['country'];
         $city=$body['city'];
-        $state=$body['state'];
+        // $state=$body['state'];
         $dob=$body['dob'];
         $postalCode=$body['postalCode'];
         //check required fields are empty or not
@@ -127,7 +127,7 @@ class UserProfileController
         $requestValue=array(
             "__kf_UserId_xn"=>$id,
             "Country_xt"=>$country,
-            "State_xt"=>$state,
+            // "State_xt"=>$state,
             "City_xt"=>$city,
             "Pincode_xn"=>$postalCode,
             "Locality_xt"=>$locality,

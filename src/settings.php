@@ -27,7 +27,7 @@ return[
         
         //db settings
         'db' => [
-            'host' => '172.16.9.42',//172.16.8.217
+            'host' => '172.16.8.143',
             'database' => 'industrial-transport',
             'username' => 'admin',
             'password' => 'mindfire',
