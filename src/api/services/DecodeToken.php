@@ -5,6 +5,8 @@
  * Decode token and get the user id from the token
  * Created date : 29/03/2019
  *
+ * PHP version 7
+ * 
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>
  */
@@ -12,6 +14,8 @@ use \Firebase\JWT\JWT;
 
 /** 
  * Decode token
+ * 
+ * Read the header from request and decode the header, and put the data into an array.
  * 
  * @return int $id return user id
  */

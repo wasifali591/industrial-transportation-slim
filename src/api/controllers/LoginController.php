@@ -7,7 +7,7 @@
  * are match or return appropriate message
  * Created date : 19/03/2019
  *
- * PHP version 5
+ * PHP version 7
  *
  * @package JWT
  * @author  Original Author <wasifali591@gmail.com>

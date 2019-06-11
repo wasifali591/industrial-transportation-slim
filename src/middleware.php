@@ -5,7 +5,7 @@
  * authentacation managed by jwt auth
  * Created date : 19/03/2019
  *
- * PHP version 5
+ * PHP version 7
  *
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>

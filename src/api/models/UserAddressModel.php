@@ -3,7 +3,7 @@
  * User Adress Layout Model
  * Created date : 09/04/2019
  *
- * PHP version 5
+ * PHP version 7
  *
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>

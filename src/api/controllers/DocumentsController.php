@@ -8,7 +8,7 @@
  * from the db acoording to the user and the type of the document
  * Created date : 27/03/2019
  * 
- * PHP version 5
+ * PHP version 7
  *
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>

@@ -3,7 +3,7 @@
  * Insert and retrieve documents related to Truck
  * Created date : 02/04/2019
  * 
- * PHP version 5
+ * PHP version 7
  * 
  * @author  Original Author <wasifali591@gmail.com>
  * @version <GIT: wasifali591/industrial-transportation-slim>
